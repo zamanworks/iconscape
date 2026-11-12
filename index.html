@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iconscape · A living wallpaper for Mac</title>
+<meta name="description" content="Iconscape is a living wallpaper for Mac that grows a landscape around your desktop icons. Move a file and the scenery reshapes itself.">
+<meta property="og:title" content="Iconscape">
+<meta property="og:description" content="A living wallpaper for Mac that grows around your desktop icons.">
+<meta property="og:image" content="img/lagoon.jpg">
+<meta name="theme-color" content="#f5efe4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181b" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#top"><img src="img/icon.png" alt="" width="28" height="28">Iconscape</a>
+  <nav>
+    <a href="#scenes">Scenes</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn btn-small" data-link="download" href="#download">Download</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>Your desktop,<br>landscaped.</h1>
+      <p class="lede">Iconscape is a living wallpaper for Mac that grows around your icons. Beaches, ski runs, city rooftops and tennis clubs reshape themselves wherever your files sit, with swimmers, skiers and gondolas moving through the scene.</p>
+      <div class="cta">
+        <a class="btn" data-link="download" href="#download">Download free</a>
+        <a class="btn btn-ghost" href="#scenes">See all 17 scenes</a>
+      </div>
+      <p class="fine">macOS 14 or later · Apple Silicon and Intel · 3 scenes free</p>
+    </div>
+
+    <figure class="screen" aria-label="Iconscape on a Mac desktop">
+      <div class="screen-bar"><span></span><span></span><span></span></div>
+      <div class="screen-view">
+        <img id="hero-img" src="img/lagoon.jpg" alt="The Lagoon scene: sandy islands around desktop icons, with swimmers and floats in the sea between them" width="1800" height="1170">
+      </div>
+      <figcaption class="hero-controls">
+        <div class="seg" role="group" aria-label="Scene">
+          <button class="on" data-scene="lagoon">Lagoon</button>
+          <button data-scene="metro">Metro</button>
+          <button data-scene="slopes">Slopes</button>
+        </div>
+        <div class="seg" role="group" aria-label="Lighting">
+          <button class="on" data-time="day">Day</button>
+          <button data-time="night">Night</button>
+        </div>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="steps">
+    <div><b>1</b><h3>Install</h3><p>Drag Iconscape into Applications. It lives quietly in your menu bar.</p></div>
+    <div><b>2</b><h3>Allow Finder</h3><p>Iconscape asks Finder where your icons sit. Positions only, never names or contents.</p></div>
+    <div><b>3</b><h3>Pick a scene</h3><p>The landscape grows around your icons. Move a file and it reshapes in a moment.</p></div>
+  </section>
+
+  <section id="scenes" class="block">
+    <div class="head">
+      <h2>17 scenes, all drawn for your layout</h2>
+      <p>Every scene is generated to fit your icons and your screen, so no two desktops look alike. Lagoon, Dunes and Metro are free.</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section id="features" class="block">
+    <div class="head"><h2>Made to stay out of your way</h2></div>
+    <div class="features">
+      <div><h3>Grows around your icons</h3><p>Icons that sit together share one island or rooftop. Nothing ever covers an icon or its name.</p></div>
+      <div><h3>Day and night</h3><p>Follows your clock, or your Mac's Dark Mode. After sunset, windows, lanterns and street lamps light up.</p></div>
+      <div><h3>On your lock screen</h3><p>Optionally sets a snapshot of your scene as your wallpaper, so it greets you when you unlock.</p></div>
+      <div><h3>Easy on your battery</h3><p>The scene is drawn once, then animated by macOS itself. Animation pauses when windows cover the desktop or Low Power Mode is on.</p></div>
+      <div><h3>Every display</h3><p>One scene per screen. A display pauses on its own while you work in an app on it.</p></div>
+      <div><h3>Private by design</h3><p>No accounts, no analytics, no tracking. The only time it goes online is to check a license key.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing" class="block">
+    <div class="head"><h2>Free to start. Pay only for the scenes you love.</h2></div>
+    <div class="prices">
+      <div class="price">
+        <h3>Free</h3>
+        <p class="amount">$0</p>
+        <p>Lagoon, Dunes and Metro, with every feature included. No time limit.</p>
+        <a class="btn btn-ghost" data-link="download" href="#download">Download</a>
+      </div>
+      <div class="price">
+        <h3>Single scene</h3>
+        <p class="amount">$2</p>
+        <p>Pick any scene to keep. Try each one on your own desktop for 60 seconds first.</p>
+        <a class="btn btn-ghost" href="#scenes">Browse scenes</a>
+      </div>
+      <div class="price best">
+        <span class="tag">Best value</span>
+        <h3>Every scene</h3>
+        <p class="amount">$7.99</p>
+        <p>All 14 paid scenes, plus every scene added in the future.</p>
+        <a class="btn" data-link="bundle" href="#pricing">Unlock everything</a>
+      </div>
+    </div>
+    <p class="note">One-time purchases, no subscription. Each license works on 2 Macs. Payments are handled securely by Lemon Squeezy (cards, Apple Pay and PayPal), and your key arrives by email.</p>
+  </section>
+
+  <section id="download" class="block download">
+    <img src="img/icon.png" alt="" width="96" height="96">
+    <h2>Download Iconscape</h2>
+    <p>Version 1.0 · macOS 14 Sonoma or later · Apple Silicon and Intel · 4 MB</p>
+    <a class="btn" data-link="download" href="#download">Download for Mac</a>
+    <div class="first-open">
+      <h3>Opening it the first time</h3>
+      <p>Iconscape is made by an independent developer and isn't notarized by Apple yet, so macOS asks you to confirm once:</p>
+      <ol>
+        <li>Open the downloaded file and drag Iconscape into Applications.</li>
+        <li>Open Iconscape. When macOS says it can't verify the developer, click <b>Done</b>.</li>
+        <li>Go to <b>System Settings → Privacy &amp; Security</b>, scroll down and click <b>Open Anyway</b>.</li>
+      </ol>
+      <p>You only need to do this once.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="block faq">
+    <div class="head"><h2>Questions</h2></div>
+    <details><summary>Why does Iconscape need access to Finder?</summary><p>Finder is the only place macOS keeps your icon positions. Iconscape asks for those positions and your icon size, nothing else. It never reads file names or contents, and nothing leaves your Mac. See the <a href="privacy.html">privacy policy</a>.</p></details>
+    <details><summary>Will it slow down my Mac or drain the battery?</summary><p>No. The landscape is drawn once, and the moving parts are animated by macOS's own graphics system. When you're working in other apps and can't see the desktop, the animation pauses and Iconscape uses next to no CPU.</p></details>
+    <details><summary>Does it work with Stacks?</summary><p>Yes. With Stacks on, the landscape follows the Stacks layout along the right edge of the screen.</p></details>
+    <details><summary>Can I try a paid scene before buying?</summary><p>Yes. Click any locked scene and choose <b>Try for 60 seconds</b>. It takes over your desktop for a minute, then switches back.</p></details>
+    <details><summary>I bought a scene. How do I unlock it?</summary><p>Your license key arrives by email. In Iconscape, open the menu bar icon, choose <b>Unlock All Themes…</b> or click the scene, then paste the key and click <b>Activate</b>.</p></details>
+    <details><summary>Can I get a refund?</summary><p>Yes. If Iconscape isn't right for you, reply to your receipt email within 14 days.</p></details>
+    <details><summary>Is it on the Mac App Store?</summary><p>No. The App Store doesn't allow apps to ask Finder where icons are, so Iconscape is available only from this site.</p></details>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>© 2026 Ahdaf Zaman. All rights reserved.</p>
+  <p><a href="privacy.html">Privacy</a> · <a href="mailto:iconscape.app@gmail.com">iconscape.app@gmail.com</a></p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">×</button>
+  <button class="lb-prev" aria-label="Previous scene">‹</button>
+  <figure><img alt=""><figcaption></figcaption></figure>
+  <button class="lb-next" aria-label="Next scene">›</button>
+</div>
+
+<script>
+// ---- Fill these in when the links exist ----
+const LINKS = {
+  download: "https://github.com/zamanware/iconscape/releases/latest/download/Iconscape.dmg",
+  bundle: ""      // Lemon Squeezy checkout link for "Iconscape – All Themes"
+};
+const CHECKOUT = {}; // scene id → Lemon Squeezy checkout link, e.g. { cinder: "https://…" }
+
+const SCENES = [
+  ["lagoon", "Lagoon", "Sandy beaches on a turquoise sea", true],
+  ["dunes", "Dunes", "Sandstone mesas in a rippled desert", true],
+  ["metro", "Metro", "Skyscraper rooftops above the city", true],
+  ["slopes", "Slopes", "Skiers and lit alpine villages on a white run", false],
+  ["claycourt", "Clay Court", "Tennis on sun-baked clay", false],
+  ["hardcourt", "Hardcourt", "Blue basketball courts and packed bleachers", false],
+  ["fairway", "Fairway", "Golfers and long shadows on pebbled green", false],
+  ["meadow", "Cloud Meadow", "Clouds drifting over a sunny field", false],
+  ["blossom", "Blossom Pond", "Cherry-blossom canopies over a koi pond", false],
+  ["amber", "Amberwood", "Autumn treetops over a golden field", false],
+  ["pinewood", "Pinewood Lake", "Pine-ringed islands on a quiet lake", false],
+  ["frost", "Frostland", "Ice floes below a snowy village", false],
+  ["grandtour", "Grand Tour", "Leather patches and travel stickers", false],
+  ["atelier", "Atelier", "Cognac leather on navy cross-grain", false],
+  ["cinder", "Cinder", "Basalt plateaus in a sea of lava", false],
+  ["lumen", "Lumen Grove", "Glowing moss islands on midnight water", false],
+  ["topo", "Topograph", "Your icons as hilltops on a contour map", false]
+];
+
+document.querySelectorAll("[data-link]").forEach(a => {
+  const url = LINKS[a.dataset.link];
+  if (url) a.href = url;
+});
+
+// Hero: scene and day/night switches
+const hero = document.getElementById("hero-img");
+let scene = "lagoon", time = "day";
+function showHero() {
+  const src = `img/${scene}${time === "night" ? "-night" : ""}.jpg`;
+  const next = new Image(), want = src;
+  showHero.want = want;   // only the latest click wins, however the images finish loading
+  next.onload = () => {
+    if (showHero.want !== want) return;
+    hero.style.opacity = 0;
+    setTimeout(() => { if (showHero.want === want) { hero.src = want; hero.style.opacity = 1; } }, 180);
+  };
+  next.src = src;
+  hero.alt = SCENES.find(s => s[0] === scene)[1] + " scene" + (time === "night" ? " at night" : "");
+}
+document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  if (b.dataset.scene) scene = b.dataset.scene; else time = b.dataset.time;
+  showHero();
+}));
+
+// Gallery and lightbox
+const gallery = document.getElementById("gallery");
+SCENES.forEach(([id, name, blurb, free], i) => {
+  const card = document.createElement("button");
+  card.className = "card";
+  card.innerHTML = `<img src="img/thumbs/${id}.jpg" alt="" loading="lazy" width="720" height="468">
+    <span class="card-meta"><span><b>${name}</b><small>${blurb}</small></span>
+    <em class="${free ? "free" : ""}">${free ? "Free" : "$2"}</em></span>`;
+  card.setAttribute("aria-label", `${name}: ${blurb}. ${free ? "Free" : "$2"}. Open larger`);
+  card.addEventListener("click", () => openLB(i));
+  gallery.appendChild(card);
+});
+
+const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img"), lbCap = lb.querySelector("figcaption");
+let cur = 0, lastFocus = null;
+function openLB(i) {
+  cur = (i + SCENES.length) % SCENES.length;
+  const [id, name, blurb, free] = SCENES[cur];
+  lbImg.src = `img/${id}.jpg`; lbImg.alt = `${name} scene`;
+  const buy = CHECKOUT[id];
+  lbCap.innerHTML = `<b>${name}</b> · ${blurb} · ${free ? "Free" : (buy ? `<a href="${buy}">Buy for $2</a>` : "$2")}`;
+  if (lb.hidden) { lastFocus = document.activeElement; lb.hidden = false; lb.querySelector(".lb-close").focus(); }
+}
+function closeLB() { lb.hidden = true; lastFocus && lastFocus.focus(); }
+lb.querySelector(".lb-close").onclick = closeLB;
+lb.querySelector(".lb-prev").onclick = () => openLB(cur - 1);
+lb.querySelector(".lb-next").onclick = () => openLB(cur + 1);
+lb.addEventListener("click", e => { if (e.target === lb) closeLB(); });
+document.addEventListener("keydown", e => {
+  if (lb.hidden) return;
+  if (e.key === "Escape") closeLB();
+  if (e.key === "ArrowLeft") openLB(cur - 1);
+  if (e.key === "ArrowRight") openLB(cur + 1);
+});
+</script>
+</body>
+</html>
