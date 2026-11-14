@@ -5,6 +5,15 @@
     <link>https://zamanworks.github.io/iconscape/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.1.0</title>
+      <pubDate>Sat, 14 Nov 2026 03:22:20 GMT</pubDate>
+      <sparkle:version>2</sparkle:version>
+      <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Real night looks for ten scenes: moonlit colours, campfires, lanterns and fireflies. Evening now follows your real sunset through the year. New stands for Clay Court and Hardcourt, snowy rocks in Frostland, Forest and Map scenes, and smoother icon moves.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.0/Iconscape-1.1.0.dmg" type="application/octet-stream" sparkle:edSignature="Pbod/71MTIEcaYGqPNFPeiyMySXTSlG4SeDasFdyvB6ETt005GmRrf08rjCU/A+0AfAeSsBau1Nduykn1+7RDw==" length="8144126" />
+    </item>
+    <item>
       <title>Iconscape 1.0.0</title>
       <pubDate>Thu, 12 Nov 2026 22:14:22 GMT</pubDate>
       <sparkle:version>1</sparkle:version>
