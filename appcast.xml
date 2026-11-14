@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
   <channel>
     <title>Iconscape</title>
-    <link>https://zamanworks.github.io/iconscape/appcast.xml</link>
+    <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
       <title>Iconscape 1.1.3</title>
