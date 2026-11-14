@@ -77,7 +77,7 @@
     <div class="head"><h2>Made to stay out of your way</h2></div>
     <div class="features">
       <div><h3>Grows around your icons</h3><p>Icons that sit together share one island or rooftop. Nothing ever covers an icon or its name.</p></div>
-      <div><h3>Day and night</h3><p>Follows your clock, or your Mac's Dark Mode. After sunset, windows, lanterns and street lamps light up.</p></div>
+      <div><h3>Day and night</h3><p>Follows the real sunset through the year, or your Mac's Dark Mode. After dark, scenes turn moonlit and windows, lanterns and campfires light up.</p></div>
       <div><h3>On your lock screen</h3><p>Optionally sets a snapshot of your scene as your wallpaper, so it greets you when you unlock.</p></div>
       <div><h3>Easy on your battery</h3><p>The scene is drawn once, then animated by macOS itself. Animation pauses when windows cover the desktop or Low Power Mode is on.</p></div>
       <div><h3>Every display</h3><p>One scene per screen. A display pauses on its own while you work in an app on it.</p></div>
@@ -104,7 +104,7 @@
         <span class="tag">Best value</span>
         <h3>Every scene</h3>
         <p class="amount">$7.99</p>
-        <p>All 14 paid scenes, plus every scene added in the future.</p>
+        <p>All 13 paid scenes, plus every scene added in the future.</p>
         <a class="btn" data-link="bundle" href="#pricing">Unlock everything</a>
       </div>
     </div>
@@ -171,15 +171,15 @@ const SCENES = [
   ["hardcourt", "Hardcourt", "Blue basketball courts and packed bleachers", false],
   ["fairway", "Fairway", "Golfers and long shadows on pebbled green", false],
   ["meadow", "Cloud Meadow", "Clouds drifting over a sunny field", false],
+  ["forest", "Forest", "Sunny clearings in a deep, many-treed wood", false],
   ["blossom", "Blossom Pond", "Cherry-blossom canopies over a koi pond", false],
   ["amber", "Amberwood", "Autumn treetops over a golden field", false],
   ["pinewood", "Pinewood Lake", "Pine-ringed islands on a quiet lake", false],
   ["frost", "Frostland", "Ice floes below a snowy village", false],
-  ["grandtour", "Grand Tour", "Leather patches and travel stickers", false],
-  ["atelier", "Atelier", "Cognac leather on navy cross-grain", false],
   ["cinder", "Cinder", "Basalt plateaus in a sea of lava", false],
   ["lumen", "Lumen Grove", "Glowing moss islands on midnight water", false],
-  ["topo", "Topograph", "Your icons as hilltops on a contour map", false]
+  ["topo", "Topograph", "Your icons as hilltops on a contour map", false],
+  ["map", "Map", "An old inked map of your own home region", false]
 ];
 
 document.querySelectorAll("[data-link]").forEach(a => {
