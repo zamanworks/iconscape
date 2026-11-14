@@ -5,6 +5,15 @@
     <link>https://zamanworks.github.io/iconscape/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.1.1</title>
+      <pubDate>Sat, 14 Nov 2026 04:44:32 GMT</pubDate>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>1.1.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Cloud Meadow is now a free scene and Dunes joins the paid scenes. Cleaner lock icons, the Theme menu ticks the scene actually showing, and refunded licences are re-locked more reliably.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.1/Iconscape-1.1.1.dmg" type="application/octet-stream" sparkle:edSignature="kGtlTTN5poRLu3ikH1pmUGaMY2F1YEMYiZ0cd38VNivEU1WV5IKV1ShkfQ+CFGZ3AoaPdZL/2TGLiqf76rAEBA==" length="8145258" />
+    </item>
+    <item>
       <title>Iconscape 1.1.0</title>
       <pubDate>Sat, 14 Nov 2026 03:22:20 GMT</pubDate>
       <sparkle:version>2</sparkle:version>
