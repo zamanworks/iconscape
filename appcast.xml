@@ -5,6 +5,15 @@
     <link>https://zamanworks.github.io/iconscape/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.1.2</title>
+      <pubDate>Sat, 14 Nov 2026 05:09:10 GMT</pubDate>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>1.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>After buying Map, Iconscape offers once to centre it on your own town instead of your time zone&#x27;s city.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.2/Iconscape-1.1.2.dmg" type="application/octet-stream" sparkle:edSignature="ncC4FDsLOAiblyPQmlwhYHn3Vrh6yg6mHv04tYmAfuxTnOfnazVGgxD3CDqjR8qVjmmKPEt5mBH2QnfzpYISDw==" length="8148929" />
+    </item>
+    <item>
       <title>Iconscape 1.1.1</title>
       <pubDate>Sat, 14 Nov 2026 04:44:32 GMT</pubDate>
       <sparkle:version>3</sparkle:version>
