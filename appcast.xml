@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.1.4</title>
+      <pubDate>Sat, 14 Nov 2026 15:30:21 GMT</pubDate>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>1.1.4</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Updates now come from iconscape.app, the app&#x27;s new home. Support email is support@iconscape.app.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.4/Iconscape-1.1.4.dmg" type="application/octet-stream" sparkle:edSignature="jFKxR2d0ooJ0CGexCi16haQ2Ci31o2xO1eNWU/0zrxHO99UN8bOcPbBYTL2GSncyCKSVOaFgFV5cREABWBimDQ==" length="8148886" />
+    </item>
+    <item>
       <title>Iconscape 1.1.3</title>
       <pubDate>Sat, 14 Nov 2026 13:42:03 GMT</pubDate>
       <sparkle:version>5</sparkle:version>
