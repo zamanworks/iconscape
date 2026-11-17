@@ -1,0 +1,93 @@
+{
+  "cars" : 7,
+  "cat" : {
+    "frames" : 2,
+    "frameTime" : 0.59999999999999998,
+    "h" : 14,
+    "rotates" : true,
+    "scale" : 1.3999999999999999,
+    "speed" : 7,
+    "w" : 26
+  },
+  "drift" : [
+    {
+      "h" : 153,
+      "w" : 344
+    },
+    {
+      "h" : 148,
+      "w" : 332
+    },
+    {
+      "h" : 149,
+      "w" : 303
+    }
+  ],
+  "kayak" : [
+    {
+      "frames" : 2,
+      "frameTime" : 0.55000000000000004,
+      "h" : 16,
+      "rotates" : true,
+      "scale" : 1.3999999999999999,
+      "speed" : 11,
+      "w" : 32
+    },
+    {
+      "frames" : 2,
+      "frameTime" : 0.55000000000000004,
+      "h" : 16,
+      "rotates" : true,
+      "scale" : 1.3999999999999999,
+      "speed" : 11,
+      "w" : 32
+    },
+    {
+      "frames" : 2,
+      "frameTime" : 0.55000000000000004,
+      "h" : 16,
+      "rotates" : true,
+      "scale" : 1.3999999999999999,
+      "speed" : 11,
+      "w" : 32
+    }
+  ],
+  "kiteKid" : {
+    "frames" : 2,
+    "frameTime" : 0.32000000000000001,
+    "h" : 20,
+    "rotates" : true,
+    "scale" : 1.3999999999999999,
+    "speed" : 9,
+    "w" : 20
+  },
+  "swimmer" : [
+    {
+      "frames" : 3,
+      "frameTime" : 0.90000000000000002,
+      "h" : 56,
+      "rotates" : false,
+      "scale" : 1.5,
+      "speed" : 2.3999999999999999,
+      "w" : 84
+    },
+    {
+      "frames" : 3,
+      "frameTime" : 0.90000000000000002,
+      "h" : 56,
+      "rotates" : false,
+      "scale" : 1.5,
+      "speed" : 2.3999999999999999,
+      "w" : 84
+    },
+    {
+      "frames" : 3,
+      "frameTime" : 0.90000000000000002,
+      "h" : 56,
+      "rotates" : false,
+      "scale" : 1.5,
+      "speed" : 2.3999999999999999,
+      "w" : 84
+    }
+  ]
+}

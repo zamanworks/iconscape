@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All scenes · Iconscape</title>
+<meta name="description" content="Every Iconscape scene: living wallpapers that grow around your desktop icons.">
+<link rel="icon" href="img/icon.png">
+<link rel="stylesheet" href="style.css?v=1.2.14"><link rel="stylesheet" href="preview.css?v=1.2.14">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="index.html"><img src="img/icon.png" alt="" width="28" height="28">Iconscape</a>
+  <nav><a class="btn btn-small" href="index.html">Home</a></nav>
+</header>
+<main class="scenes-page">
+  <div class="head">
+    <h1>All scenes</h1>
+    <p>Every scene is generated to fit your icons and your screen, so no two desktops look alike. Lagoon, Cloud Meadow, and Metro are free. Try the rest in the app before you buy: $2 each, or all of them, including every future scene, with Every scene.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+<footer class="foot">
+  <p>© 2026 Ahdaf Zaman. All rights reserved.</p>
+  <p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refunds.html">Refunds</a> · <a href="mailto:support@iconscape.app">support@iconscape.app</a></p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">×</button>
+  <button class="lb-prev" aria-label="Previous scene">‹</button>
+  <figure><div class="lb-art"><img alt=""><video muted loop playsinline aria-hidden="true"></video></div>
+    <figcaption><b></b><span></span></figcaption></figure>
+  <button class="lb-next" aria-label="Next scene">›</button>
+</div>
+
+<script src="scenes.js?v=1.2.14"></script>
+<script>
+// Each scene as a tile: hovering plays its loop over the picture, clicking opens it large.
+const grid = document.getElementById("grid");
+SCENES.forEach(([id, name, blurb, free], i) => {
+  const t = document.createElement("button");
+  t.className = "scene"; t.dataset.id = id;
+  t.innerHTML = `<span class="scene-art"><img src="${thumbSrc(id)}" alt="" loading="lazy" width="720" height="468"><video muted loop playsinline preload="none" aria-hidden="true"></video></span>
+    <span class="scene-meta"><span><b>${name}</b><small>${blurb}</small></span><em class="${free ? "free" : ""}">${free ? "Free" : "$2"}</em></span>`;
+  t.setAttribute("aria-label", `${name}: ${blurb}. ${free ? "Free" : "$2"}. Play larger`);
+  t.addEventListener("click", () => openLB(i));
+  const v = t.querySelector("video");
+  t.addEventListener("pointerenter", e => {
+    if (e.pointerType !== "mouse" || stillMotion.matches) return;
+    const src = loopSrc(id);
+    if (v.getAttribute("src") !== src) v.src = src;
+    v.play().catch(() => {});
+  });
+  t.addEventListener("pointerleave", () => { v.classList.remove("playing"); v.pause(); });
+  v.addEventListener("playing", () => { if (t.matches(":hover")) v.classList.add("playing"); });
+  grid.appendChild(t);
+});
+const more = document.createElement("div");
+more.className = "scene scene-more";
+more.innerHTML = `<span class="scene-art more-art" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></span>
+  <span class="scene-meta"><span><b>And many more in the works</b><small>New scenes are on the way, and they're included with Every scene.</small></span></span>`;
+grid.appendChild(more);
+darkMode.addEventListener("change", () => {
+  grid.querySelectorAll(".scene[data-id]").forEach(t => { t.querySelector("img").src = thumbSrc(t.dataset.id); });
+  if (!lb.hidden) openLB(cur);
+});
+</script>
+</body>
+</html>

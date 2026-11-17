@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iconscape · A living wallpaper for your Mac</title>
+<meta name="description" content="Iconscape is a living wallpaper for your Mac that grows a landscape around your desktop icons. Move a file and the scenery reshapes itself.">
+<meta property="og:title" content="Iconscape">
+<meta property="og:description" content="A living wallpaper for your Mac that grows around your desktop icons.">
+<meta property="og:image" content="https://iconscape.app/img/lagoon.jpg">
+<meta property="og:url" content="https://iconscape.app/">
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e2021" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<link rel="stylesheet" href="style.css?v=1.2.14"><link rel="stylesheet" href="preview.css?v=1.2.14">
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#top"><img src="img/icon.png" alt="" width="28" height="28">Iconscape</a>
+  <nav>
+    <a href="#scenes">Scenes</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn btn-small swap" data-link="download" href="#download"><span class="swap-lead" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></span><span>Download</span><span class="swap-trail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span></a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero2">
+    <h1><span class="l1">Your desktop,</span><br><span class="grassy"><span class="word">landscaped.</span></span></h1>
+    <p class="lede">A living wallpaper for Mac that grows around your icons. Move a file and the beach, the city, or the ski run reshapes itself around it.</p>
+    <div class="cta">
+      <a class="btn swap" data-link="download" href="#download"><span class="swap-lead" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></span><span>Download free</span><span class="swap-trail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span></a>
+      <a class="btn btn-ghost" href="#scenes">See all scenes</a>
+    </div>
+    <p class="fine">macOS 14 or later · Apple Silicon and Intel · 3 scenes free</p>
+  </section>
+
+  <section class="demo-wrap" aria-label="Try Iconscape: drag the icons">
+    <div class="demo locked" id="demo">
+      <div class="demo-bar">
+        <span class="demo-menus"><b>Finder</b><span>File</span><span>Edit</span><span>View</span><span>Go</span><span>Window</span></span>
+        <span class="demo-status">
+          <button class="demo-menu-btn" aria-haspopup="true" aria-expanded="false" aria-label="Iconscape menu"><img src="img/icon.png" alt="" width="16" height="16"></button>
+          <span class="demo-clock"></span>
+        </span>
+      </div>
+      <div class="demo-stage">
+        <canvas class="demo-ground" aria-hidden="true"></canvas>
+        <div class="demo-moon" aria-hidden="true"></div>
+        <canvas class="demo-shade" aria-hidden="true"></canvas>
+        <canvas class="demo-life" aria-hidden="true"></canvas>
+        <canvas class="demo-puffs" aria-hidden="true"></canvas>
+        <canvas class="demo-sky" aria-hidden="true"></canvas>
+        <canvas class="demo-old" aria-hidden="true" hidden></canvas>
+        <div class="demo-icons"></div>
+        <div class="demo-hint" aria-hidden="true">Drag any icon, or drag across the desktop to pick several</div>
+        <div class="demo-hint menu-hint gone" aria-hidden="true">Switch scenes or try night</div>
+        <div class="demo-panel" hidden>
+          <div class="dp-head"><img src="img/icon.png" alt="" width="22" height="22"><b>Iconscape</b></div>
+          <div class="dp-label">Scene</div>
+          <div class="dp-scenes">
+            <button class="dp-scene on" data-scene="lagoon"><span class="sw sw-lagoon"></span>Lagoon</button>
+            <button class="dp-scene" data-scene="meadow"><span class="sw sw-meadow"></span>Cloud Meadow</button>
+            <button class="dp-scene" data-scene="metro"><span class="sw sw-metro"></span>Metro</button>
+          </div>
+          <div class="dp-row"><span>Lighting</span>
+            <div class="seg"><button class="on" data-light="day">Day</button><button data-light="night">Night</button></div>
+          </div>
+          <button class="dp-item" data-act="add">New file on the desktop</button>
+          <button class="dp-item" data-act="tidy">Tidy up icons</button>
+          <button class="dp-item" data-act="lock">Lock Screen</button>
+          <p class="dp-note">These three are free. The app has many more, and new ones keep coming.</p>
+        </div>
+        <div class="demo-lock">
+          <div class="lk-time"><span class="lk-date"></span><span class="lk-clock"></span></div>
+          <button class="lk-user" aria-label="Unlock the demo"><span class="lk-avatar"><img src="img/icon.png" alt="" width="64" height="64"></span><b>Iconscape</b><span class="lk-hint">Click to unlock</span></button>
+        </div>
+      </div>
+    </div>
+    <p class="demo-caption">These are the real scenes, running in your browser. Drag the icons around (a few at once, too), or open the <img src="img/icon.png" alt="Iconscape" width="14" height="14"> menu to switch scenes and try night.</p>
+  </section>
+
+  <section class="how">
+    <div class="how-card"><b>1</b><h3>Drop it in Applications</h3><p>It lives quietly in your menu bar.</p></div>
+    <div class="how-card"><b>2</b><h3>Allow Finder</h3><p>Positions only. Never names or contents.</p></div>
+    <div class="how-card"><b>3</b><h3>Pick a scene</h3><p>It grows in around your icons in a second.</p></div>
+  </section>
+
+  <section id="scenes" class="block">
+    <div class="head">
+      <h2>A growing collection, all drawn for your layout</h2>
+      <p>Every scene is generated to fit your icons and your screen, so no two desktops look alike. Lagoon, Cloud Meadow, and Metro are free, and you can try every other scene in the app before you buy.</p>
+      <a class="more-link" href="scenes.html">Browse all scenes <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section id="features" class="block">
+    <div class="head"><h2>Made to stay out of your way</h2></div>
+    <div class="bento">
+      <article class="tile t-shape">
+        <div class="t-art art-lagoon"></div>
+        <div class="t-copy"><h3>Shape&#8209;shifting</h3><p>Icons that sit together share one island or rooftop. Nothing ever covers an icon or its name.</p>
+          <div class="chips"><span>Reads positions only</span><span>Unique to your desktop</span></div></div>
+      </article>
+      <article class="tile t-sun">
+        <div class="t-art t-split" id="split"><div class="split-day"></div><div class="split-night"></div><input type="range" min="0" max="100" value="55" aria-label="Day to night"></div>
+        <div class="t-copy"><h3>Sun&#8209;synced</h3><p>Follows the real sunset, or Dark Mode. After dark, windows, lanterns, and campfires light up.</p></div>
+      </article>
+      <article class="tile t-light">
+        <div class="t-copy"><h3>Featherweight</h3><p>Drawn once, animated by macOS itself. It pauses when windows cover the desktop or Low Power Mode is on.</p></div>
+        <div class="chips"><span>Auto&#8209;pause</span><span>Low Power aware</span></div>
+      </article>
+      <article class="tile t-priv">
+        <div class="t-copy"><h3>Private</h3><p>No accounts, analytics, or tracking. Online only for license keys and updates.</p></div>
+        <div class="chips"><span>No account</span><span>No tracking</span></div>
+      </article>
+      <article class="tile t-disp">
+        <div class="screens" aria-hidden="true"><div class="scr a"></div><div class="scr b"></div></div>
+        <div class="t-copy"><h3>Every display</h3><p>One scene per screen, flowing from one to the next. Each pauses on its own while you work.</p></div>
+      </article>
+      <article class="tile t-lock">
+        <div class="lockmock" aria-hidden="true"><span class="lk-time">9:41</span><span class="lk-date">Saturday</span></div>
+        <div class="t-copy"><h3>Lock&#8209;screen ready</h3><p>Sets a snapshot as your wallpaper, so it greets you at login.</p></div>
+      </article>
+      <article class="tile t-alive">
+        <div class="t-copy"><h3>Alive</h3><p>Swimmers, skiers, gondolas, songbirds, and fireflies, going about their day.</p></div>
+        <div class="alive-art" aria-hidden="true"></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="pricing" class="block">
+    <div class="head"><h2>Free to start. Pay only for the scenes you love.</h2></div>
+    <div class="prices">
+      <div class="price">
+        <h3>Free</h3>
+        <p class="amount">$0</p>
+        <p>Lagoon, Cloud Meadow, and Metro, with every feature included. No time limit.</p>
+        <a class="btn btn-ghost swap" data-link="download" href="#download"><span class="swap-lead" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></span><span>Download</span><span class="swap-trail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span></a>
+      </div>
+      <div class="price">
+        <h3>Single scene</h3>
+        <p class="amount">$2</p>
+        <p>Pick any scene to keep. Try each one on your own desktop for 60 seconds first.</p>
+        <a class="btn btn-ghost" href="#scenes">Browse scenes</a>
+      </div>
+      <div class="price best">
+        <span class="tag">Best value</span>
+        <h3>Every scene</h3>
+        <p class="amount">$7.99</p>
+        <p>All <span id="paid-count">13</span> paid scenes, plus every scene added in the future.</p>
+        <a class="btn swap" data-link="bundle" href="#pricing"><span class="swap-lead" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span>Unlock everything</span><span class="swap-trail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span></a>
+      </div>
+    </div>
+    <p class="note">One-time purchases, no subscription. Each license works on 2 Macs. Payments are handled securely by Polar, our merchant of record. Your key appears right after you pay and arrives by email.</p>
+  </section>
+
+  <section id="download" class="block download">
+    <img src="img/icon.png" alt="" width="96" height="96">
+    <h2>Download Iconscape</h2>
+    <p>Version 1.2.14 · macOS 14 Sonoma or later · Apple Silicon and Intel · 9 MB</p>
+    <a class="btn swap" data-link="download" href="#download"><span class="swap-lead" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></span><span>Download for Mac</span><span class="swap-trail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span></a>
+    <div class="first-open">
+      <h3>Installing</h3>
+      <ol>
+        <li>Open the downloaded file and drag Iconscape into Applications.</li>
+        <li>Open Iconscape from Applications. macOS asks if you're sure, since it came from the internet. Click <b>Open</b>.</li>
+      </ol>
+      <p>Iconscape is notarized by Apple, so it opens like any other app.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="block faq">
+    <div class="faq-side">
+      <h2>FAQ</h2>
+      <p>Have more questions? Don't hesitate to <a href="mailto:support@iconscape.app">contact us</a>.</p>
+    </div>
+    <div class="faq-list">
+      <details><summary>Why does Iconscape need access to Finder?</summary><p>Finder is the only place macOS keeps your icon positions. Iconscape asks for those positions and your icon size, nothing else. It never reads file names or contents, and nothing leaves your Mac. See the <a href="privacy.html">privacy policy</a>.</p></details>
+      <details><summary>Will it slow down my Mac or drain the battery?</summary><p>No. The landscape is drawn once, and the moving parts are animated by macOS's own graphics system. When you're working in other apps and can't see the desktop, the animation pauses and Iconscape uses next to no CPU.</p></details>
+      <details><summary>Does it work with Stacks?</summary><p>Not yet. Finder doesn't tell other apps where stacked icons are drawn, so with Stacks on, the landscape keeps clear of where your icons sit when they're spread out. For the best fit, turn Stacks off.</p></details>
+      <details><summary>Can I try a paid scene before buying?</summary><p>Yes. Click any locked scene and choose <b>Try for 60 seconds</b>. It takes over your desktop for a minute, then switches back.</p></details>
+      <details><summary>I bought a scene. How do I unlock it?</summary><p>Your license key arrives by email. In Iconscape, open the menu bar icon, choose <b>Unlock All Themes…</b> or click the scene, then paste the key and click <b>Activate</b>.</p></details>
+      <details><summary>I lost my license key. How do I get it back?</summary><p>Open the <a href="https://polar.sh/iconscape/portal" target="_blank" rel="noopener">customer portal</a> and sign in with the email you bought with. All your keys are there, and you can free up a Mac's spot there too.</p></details>
+      <details><summary>Can I get a refund?</summary><p>Yes. If Iconscape isn't right for you, email <a href="mailto:support@iconscape.app">support@iconscape.app</a> within 7 days of buying for a full refund.</p></details>
+      <details><summary>How do updates and new scenes arrive?</summary><p>Iconscape checks for updates once a day and installs them with one click. New scenes arrive in updates, and if you bought every scene, new ones unlock automatically.</p></details>
+      <details><summary>Is it on the Mac App Store?</summary><p>No. The App Store doesn't allow apps to ask Finder where icons are, so Iconscape is available only from this site.</p></details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>© 2026 Ahdaf Zaman. All rights reserved.</p>
+  <p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refunds.html">Refunds</a> · <a href="mailto:support@iconscape.app">support@iconscape.app</a></p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">×</button>
+  <button class="lb-prev" aria-label="Previous scene">‹</button>
+  <figure><div class="lb-art"><img alt=""><video muted loop playsinline aria-hidden="true"></video></div>
+    <figcaption><b></b><span></span></figcaption></figure>
+  <button class="lb-next" aria-label="Next scene">›</button>
+</div>
+
+<script src="scenes.js?v=1.2.14"></script>
+<script>
+// ---- Fill these in when the links exist ----
+const LINKS = {
+  download: "https://github.com/zamanworks/iconscape/releases/latest/download/Iconscape.dmg",
+  bundle: "https://buy.polar.sh/polar_cl_tLPBbMsq6MXfR4rInwI607sZzl4fRt3UZVGtH4NS88d"  // Polar checkout link for "Iconscape – All Themes"
+};
+
+
+document.querySelectorAll("[data-link]").forEach(a => {
+  const url = LINKS[a.dataset.link];
+  if (url) a.href = url;
+});
+
+// "landscaped." sits on a strip of meadow, drawn in Cloud Meadow's colours. On load it grows the way a
+// scene does in the app: the ground first, then grass spreading out from the middle, then the flowers.
+(() => {
+  const host = document.querySelector(".grassy");
+  if (!host) return;
+  const NS = "http://www.w3.org/2000/svg", W = 1000;
+  const fs = parseFloat(getComputedStyle(host).fontSize), H = Math.round(W * 0.5 * fs / (host.offsetWidth * 1.06));
+  const base = H - 6;
+  let seed = 11;
+  const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const delay = x => Math.round(250 + Math.abs(x - W / 2) / (W / 2) * 650 + rnd() * 120);
+  const blade = (x, h, w, lean) =>
+    `M${x - w} ${base}Q${x - w * .2 + lean * .5} ${base - h * .55} ${x + lean} ${base - h}Q${x + w * .2 + lean * .5} ${base - h * .55} ${x + w} ${base}Z`;
+  const layer = (cls, body) => {
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", cls); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none"); svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = body;
+    return svg;
+  };
+  const tufts = (from, to, gap, hMin, hMax, cols) => {
+    let out = "";
+    for (let x = from; x < to; x += gap * (.6 + rnd() * .8)) {
+      const h = H * (hMin + rnd() * (hMax - hMin)), c = cols[Math.floor(rnd() * cols.length)];
+      out += `<g class="tuft" style="--d:${delay(x)}ms"><path fill="${c}" d="${blade(x - 5, h * .75, 4, -7 - rnd() * 5)}${blade(x, h, 4.5, rnd() * 4 - 2)}${blade(x + 5, h * .8, 4, 7 + rnd() * 5)}"/></g>`;
+    }
+    return out;
+  };
+  let flowers = "";
+  for (let i = 0; i < 11; i++) {
+    const x = 40 + (i + rnd() * .7) * (W - 80) / 11, y = base - H * (.25 + rnd() * .3);
+    const c = ["#ffffff", "#f4d35e", "#e89ab0"][i % 3], mid = c === "#f4d35e" ? "#ffffff" : "#f4d35e";
+    let petals = "";
+    for (let k = 0; k < 5; k++) { const a = k * 1.2566 + rnd() * .3; petals += `<circle cx="${(Math.cos(a) * 3.4).toFixed(1)}" cy="${(Math.sin(a) * 3.4).toFixed(1)}" r="3"/>`; }
+    flowers += `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)})"><g class="bloom" style="--d:${delay(x) + 550}ms" fill="${c}">${petals}<circle r="2" fill="${mid}"/></g></g>`;
+  }
+  host.prepend(layer("grass grass-back",
+    `<ellipse class="ground" cx="${W / 2}" cy="${base + 4}" rx="${W / 2 - 4}" ry="5" fill="#3c4a1e" opacity=".16"/>` +
+    `<path class="ground" d="M8 ${base + 2}C${W * .3} ${base - 13} ${W * .7} ${base - 13} ${W - 8} ${base + 2}Z" fill="#7cb050"/>` +
+    tufts(14, W - 14, 13, .5, .95, ["#6e9f45", "#7cb050"])));
+  host.append(layer("grass grass-front", tufts(10, W - 10, 13, .3, .55, ["#8fc25c", "#a5d06c"]) + flowers));
+})();
+
+// Pieces of each section rise in as they scroll into view, a few at a time. Skipped when reduced motion
+// is on or the browser can't watch.
+if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("reveal");
+  const seen = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("seen");
+    seen.unobserve(e.target);
+    setTimeout(() => e.target.classList.remove("rv", "seen"), 1600);   // hand transforms back to hover effects
+  }), { rootMargin: "0px 0px -10% 0px" });
+  document.querySelectorAll(".how, .block").forEach(sec => {
+    sec.querySelectorAll(":scope > .how-card, :scope > .head, :scope > .gallery, .bento > *, .prices > *, .faq-side, .faq-list > details, .download > *")
+      .forEach((el, i) => {
+        if (el.closest(".rv")) return;
+        el.classList.add("rv");
+        el.style.setProperty("--i", Math.min(i % 4, 3));
+        seen.observe(el);
+      });
+  });
+}
+
+// Day/night split tile
+const split = document.getElementById("split");
+if (split) { const r = split.querySelector("input"); const f = () => split.style.setProperty("--cut", r.value + "%"); r.addEventListener("input", f); f(); }
+
+// The bundle's scene count comes from the scene list, so it stays right as scenes are added.
+document.getElementById("paid-count").textContent = SCENES.filter(s => !s[3]).length;
+
+const gallery = document.getElementById("gallery");
+// Two rails gliding in opposite directions, each holding its scenes twice so the glide wraps around
+// seamlessly. Their loops load and play only while the gallery is on screen.
+const rails = [];
+const halves = [SCENES.slice(0, Math.ceil(SCENES.length / 2)), SCENES.slice(Math.ceil(SCENES.length / 2))];
+halves.forEach((list, r) => {
+  const rail = document.createElement("div"); rail.className = "rail" + (r ? " rev" : "");
+  const track = document.createElement("div"); track.className = "track";
+  const items = r ? [...list, null] : list;               // the second rail ends with "many more in the works"
+  [...items, ...items].forEach((scene, k) => {
+    const copy = k >= items.length;
+    if (!scene) {
+      const m = document.createElement("div");
+      m.className = "slide slide-more"; if (copy) m.setAttribute("aria-hidden", "true");
+      m.innerHTML = `<span class="more-art" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></span>
+        <span class="slide-cap">And many more in the works</span>`;
+      track.appendChild(m); return;
+    }
+    const [id, name, blurb, free] = scene;
+    const s = document.createElement("button");
+    s.className = "slide"; s.dataset.id = id;
+    if (copy) { s.tabIndex = -1; s.setAttribute("aria-hidden", "true"); }
+    s.innerHTML = `<img src="${thumbSrc(id)}" alt="" loading="lazy" width="720" height="468"><video muted loop playsinline preload="none" aria-hidden="true"></video>
+      <span class="slide-cap">${name}<em>${free ? "Free" : "$2"}</em></span>`;
+    s.setAttribute("aria-label", `${name}: ${blurb}. ${free ? "Free" : "$2"}. Play larger`);
+    s.addEventListener("click", () => openLB(SCENES.findIndex(x => x[0] === id)));
+    track.appendChild(s);
+  });
+  rail.appendChild(track); gallery.appendChild(rail);
+  rails.push({ rail, track, n: items.length, dir: r ? 1 : -1, x: 0, k: stillMotion.matches ? 0 : 1, hold: false, period: 0 });
+});
+// The rows glide on their own (each scene takes 9 seconds to pass) and ease to a stop under the pointer so a
+// scene can be clicked. A sideways trackpad swipe, or a finger swipe on a phone, slides a row by hand too.
+// Up-and-down scrolling is left alone.
+rails.forEach(g => {
+  g.rail.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") g.hold = true; });
+  g.rail.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") g.hold = false; });
+  g.rail.addEventListener("wheel", e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();                                     // and no "swipe back a page" either
+    g.x -= e.deltaX; wakeRails();
+  }, { passive: false });
+  let from = null, moved = 0;
+  g.rail.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") { from = e.clientX; moved = 0; g.hold = true; } });
+  g.rail.addEventListener("pointermove", e => {
+    if (from === null) return;
+    g.x += e.clientX - from; moved += Math.abs(e.clientX - from); from = e.clientX; wakeRails();
+  });
+  const end = () => { if (from !== null) { from = null; g.hold = false; } };
+  g.rail.addEventListener("pointerup", end); g.rail.addEventListener("pointercancel", end);
+  g.rail.addEventListener("click", e => { if (moved > 8) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);   // a swipe isn't a tap
+});
+const measureRails = () => rails.forEach(g => { g.period = (g.track.scrollWidth + 22) / 2; });
+addEventListener("resize", measureRails);
+let railFrame = 0, railLast = 0;
+function stepRails(now) {
+  const dt = railLast ? Math.min(0.05, (now - railLast) / 1000) : 0; railLast = now;
+  if (!rails[0].period) measureRails();
+  let moving = false;
+  rails.forEach(g => {
+    g.k += ((g.hold || stillMotion.matches ? 0 : 1) - g.k) * Math.min(1, dt * 5);   // ease in and out of the pause
+    g.x += g.dir * g.k * (g.period / (g.n * 9)) * dt;
+    g.x = ((g.x % g.period) - g.period) % g.period;          // wrap: the second copy takes over seamlessly
+    g.track.style.transform = `translate3d(${g.x}px, 0, 0)`;
+    if (g.k > 0.001) moving = true;
+  });
+  railFrame = onScreen && moving ? requestAnimationFrame(stepRails) : 0;
+  if (!railFrame) railLast = 0;
+}
+function wakeRails() { if (!railFrame) railFrame = requestAnimationFrame(stepRails); }
+const vids = [...gallery.querySelectorAll("video")];
+let onScreen = false;
+function setPlaying() {
+  vids.forEach(v => {
+    if (onScreen && !stillMotion.matches) {
+      const src = loopSrc(v.closest(".slide").dataset.id);
+      if (v.getAttribute("src") !== src) v.src = src;
+      v.play().catch(() => {});
+    } else v.pause();
+  });
+}
+new IntersectionObserver(es => { onScreen = es[0].isIntersecting; setPlaying(); if (onScreen) wakeRails(); }, { rootMargin: "200px" }).observe(gallery);
+darkMode.addEventListener("change", () => {
+  gallery.querySelectorAll(".slide[data-id]").forEach(c => { c.querySelector("img").src = thumbSrc(c.dataset.id); });
+  setPlaying();
+  if (!lb.hidden) openLB(cur);
+});
+
+
+// Glides further down the page, re-aimed every frame: the demo grows as it unlocks on the way past, so a fixed
+// target would stop short. Used for section links (clicked here, or followed from another page) and for a refresh
+// part-way down, which loads at the top and glides back to where you were (kept relative to your section).
+(() => {
+  if (!("scrollRestoration" in history)) return;
+  history.scrollRestoration = "manual";
+  const KEY = "resume:" + location.pathname, root = document.documentElement;
+  const parts = () => [...document.querySelectorAll("main > section, footer")];
+  const topOf = el => el.getBoundingClientRect().top + scrollY;
+  const end = y => Math.max(0, Math.min(y, root.scrollHeight - innerHeight));
+  addEventListener("pagehide", () => {
+    try {
+      const y = scrollY, i = parts().findLastIndex(el => topOf(el) <= y + 1);
+      if (y > 80 && i >= 0) sessionStorage.setItem(KEY, JSON.stringify({ i, off: y - topOf(parts()[i]) }));
+      else sessionStorage.removeItem(KEY);
+    } catch {}
+  });
+
+  let run = 0, stopped = false;
+  const stop = () => { stopped = true; };          // any scrolling of your own takes over
+  function glide(target) {
+    const id = ++run; stopped = false;
+    root.dataset.resume = "";                      // the demo unlocks on the way past instead of catching the page
+    const done = () => {
+      if (id !== run) return;
+      delete root.dataset.resume;
+      removeEventListener("wheel", stop); removeEventListener("touchstart", stop); removeEventListener("keydown", stop);
+    };
+    if (stillMotion.matches) { scrollTo({ top: target(), behavior: "instant" }); requestAnimationFrame(() => { scrollTo({ top: target(), behavior: "instant" }); done(); }); return; }
+    addEventListener("wheel", stop, { passive: true }); addEventListener("touchstart", stop, { passive: true }); addEventListener("keydown", stop);
+    const from = scrollY, dur = Math.min(1800, 700 + Math.abs(target() - from) * 0.25), t0 = performance.now();
+    const step = now => {
+      if (id !== run) return;
+      if (stopped) { done(); return; }
+      const p = Math.min(1, (now - t0) / dur), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      scrollTo({ top: from + (target() - from) * e, behavior: "instant" });
+      if (now - t0 < dur + 900) requestAnimationFrame(step); else done();   // then stay with it while the demo finishes growing
+    };
+    requestAnimationFrame(step);
+  }
+  const toSection = el => () => end(topOf(el) - (parseFloat(getComputedStyle(root).scrollPaddingTop) || 0));
+
+  // Section links on this page.
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.hash.length < 2 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+    if (!el) return;
+    e.preventDefault();
+    if (location.hash !== a.hash) history.pushState(null, "", a.hash);
+    glide(toSection(el));
+  });
+
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem(KEY)); sessionStorage.removeItem(KEY); } catch {}
+  const nav = performance.getEntriesByType("navigation")[0], reload = nav && nav.type === "reload";
+  const later = fn => addEventListener("load", () => setTimeout(fn, 350));
+  if (reload && saved) {                           // a refresh returns to where you were, even with #pricing in the address
+    root.dataset.resume = "";
+    later(() => glide(() => { const el = parts()[saved.i]; return end(el ? topOf(el) + saved.off : 0); }));
+  } else if (!reload && location.hash.length > 1) {   // arriving from a link to a section, e.g. Pricing on the Scenes page
+    const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el) { root.dataset.resume = ""; later(() => glide(toSection(el))); }
+  }
+})();
+</script>
+<script src="demo.js?v=1.2.14"></script>
+</body>
+</html>

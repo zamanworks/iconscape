@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Iconscape</title>
+    <link>https://iconscape.app/appcast.xml</link>
+    <language>en</language>
+    <item>
+      <title>Iconscape 1.2.14</title>
+      <pubDate>Tue, 17 Nov 2026 00:28:47 GMT</pubDate>
+      <sparkle:version>26</sparkle:version>
+      <sparkle:shortVersionString>1.2.14</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Iconscape is now notarized by Apple, so it opens like any other app with no extra steps.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.14/Iconscape-1.2.14.dmg" type="application/octet-stream" sparkle:edSignature="y0davokyVWdOkIwDzjGnuQ42qcaJa08bFAgUKdSFIw4Th1y129hdj23zR4W/rZjlHlJTWQTRkpWWG8unXqMNBg==" length="8520290" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.13</title>
+      <pubDate>Tue, 17 Nov 2026 00:09:32 GMT</pubDate>
+      <sparkle:version>25</sparkle:version>
+      <sparkle:shortVersionString>1.2.13</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Purchases now go through Polar. Settings → License lists the Macs using each key by name, so you can free a spot from any of them.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.13/Iconscape-1.2.13.dmg" type="application/octet-stream" sparkle:edSignature="sd+X05qNb3izYxS+ixiC0xMYeiR2QS95w0Jeu8ZFHM8oYk7zFCm7XU3kywuWjjRknnyG6El7VICsqoZS9zNyDw==" length="8515145" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.12</title>
+      <pubDate>Mon, 16 Nov 2026 14:13:44 GMT</pubDate>
+      <sparkle:version>24</sparkle:version>
+      <sparkle:shortVersionString>1.2.12</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Moving icons is smoother on cloud and canopy scenes: no more puffs briefly vanishing or nudging out of place mid-move. Blossom Pond has a cleaner look and moves as smoothly as the other cloud scenes.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.12/Iconscape-1.2.12.dmg" type="application/octet-stream" sparkle:edSignature="pQHW30Lh/F4yoEtk3su1Fxg0jo32TpnjZLAp4masZL/Q681YGoHpSVkefiKlDgDeumyb79w8qDT/13lZCJ3YCw==" length="8509233" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.11</title>
+      <pubDate>Mon, 16 Nov 2026 13:26:53 GMT</pubDate>
+      <sparkle:version>23</sparkle:version>
+      <sparkle:shortVersionString>1.2.11</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The lock screen stays current while your Mac is locked and rests while the display is off, and a scene you&#x27;re trying out never ends up on it.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.11/Iconscape-1.2.11.dmg" type="application/octet-stream" sparkle:edSignature="3uhSiir3fKarE+dBfj/MoEsEXPQWgRzdoxcoWSVvUdrERWhMhGpTvFpwbcTDJG1pZEbVWHGboj1nHgkV3SBACw==" length="8514908" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.10</title>
+      <pubDate>Sun, 15 Nov 2026 23:58:32 GMT</pubDate>
+      <sparkle:version>22</sparkle:version>
+      <sparkle:shortVersionString>1.2.10</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>A leaner app, and scenes keep clear of your icons&#x27; own spots when Stacks are on.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.10/Iconscape-1.2.10.dmg" type="application/octet-stream" sparkle:edSignature="6rU4sFhUYaq7zkvxFaPGbWEEcM8riZqXskeil1+5ewMbTakV/i+SKOHGBJns+v1UoW8LuAMeioK2mFT66Ew1AQ==" length="8514596" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.9</title>
+      <pubDate>Sun, 15 Nov 2026 23:37:13 GMT</pubDate>
+      <sparkle:version>21</sparkle:version>
+      <sparkle:shortVersionString>1.2.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Stacks on macOS Tahoe get the right space, and scenes pause straight away after changing the Dock setting.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.9/Iconscape-1.2.9.dmg" type="application/octet-stream" sparkle:edSignature="k2k4KZ2pZRsyRsGHrANGhQ0hRx1JmS3eBiHNToJUEGDIbyoU8B6ggN/6NndsCl+bq+RrPTs79TYs4hXKhycPDA==" length="8515969" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.8</title>
+      <pubDate>Sun, 15 Nov 2026 22:58:32 GMT</pubDate>
+      <sparkle:version>20</sparkle:version>
+      <sparkle:shortVersionString>1.2.8</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Scenes pause properly when another app is in front, and the menu lists your most recent scene first.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.8/Iconscape-1.2.8.dmg" type="application/octet-stream" sparkle:edSignature="QYElQ9+iSJxGvNbxyQWDNxB3/NhVGuwIRRsKj/2tRfd6lIWk+WW4a2h4CpK/dACucwiAyK5FmC6cP/Fw08uAAA==" length="8514173" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.7</title>
+      <pubDate>Sun, 15 Nov 2026 22:32:39 GMT</pubDate>
+      <sparkle:version>19</sparkle:version>
+      <sparkle:shortVersionString>1.2.7</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>A Mac removed from a license in the store now locks its scenes, and the menu lists the scenes you can use first.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.7/Iconscape-1.2.7.dmg" type="application/octet-stream" sparkle:edSignature="NwSzZV+Wt2K5I/ISEw1G5hqQJbv+HG188mt2dZmAMlpvLCwuvvtjWyxAHhOeoKYj/lU5Ww/502EXtr2cty3uCg==" length="8512697" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.6</title>
+      <pubDate>Sun, 15 Nov 2026 22:18:55 GMT</pubDate>
+      <sparkle:version>18</sparkle:version>
+      <sparkle:shortVersionString>1.2.6</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Smoother icon moves in Cloud Meadow, Blossom Pond, and Amberwood.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.6/Iconscape-1.2.6.dmg" type="application/octet-stream" sparkle:edSignature="61I+Awwf+AefL6ZijpqK0DaPof9NYAhQBuKwoBhClynZsgQolizn5W5tD5sbXP+sS/u8vDv1qAerH+aA3H36BA==" length="8512272" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.5</title>
+      <pubDate>Sun, 15 Nov 2026 21:34:02 GMT</pubDate>
+      <sparkle:version>17</sparkle:version>
+      <sparkle:shortVersionString>1.2.5</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Moving icons is smoother in Cloud Meadow, Blossom Pond, and Amberwood. The app icon in Settings → About now opens iconscape.app.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.5/Iconscape-1.2.5.dmg" type="application/octet-stream" sparkle:edSignature="KDEldmo1XZEhs16GCWPV/ohB69rSo55r6EU6quRPnIlPatozaVluQ4+LLMEXFNopsok4/RSvV9ZbpuTyoogvBA==" length="8498850" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.4</title>
+      <pubDate>Sun, 15 Nov 2026 20:55:50 GMT</pubDate>
+      <sparkle:version>16</sparkle:version>
+      <sparkle:shortVersionString>1.2.4</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Iconscape now uses much less memory after icons move or scenes change.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.4/Iconscape-1.2.4.dmg" type="application/octet-stream" sparkle:edSignature="ReWXluekNoiOlYqJ9QnE3Wd+ulSF57y/6BNuHn5LB4ZmPd1qWhivvryVBX8Dn4HgtqUOPcAfoL/+24/4yd0BDQ==" length="8492626" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.3</title>
+      <pubDate>Sun, 15 Nov 2026 20:39:14 GMT</pubDate>
+      <sparkle:version>15</sparkle:version>
+      <sparkle:shortVersionString>1.2.3</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Opening Iconscape from the disk image now offers to move it to Applications. Picking a scene or Surprise Me during a 60-second trial now switches right away. Fixed the Buy buttons.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.3/Iconscape-1.2.3.dmg" type="application/octet-stream" sparkle:edSignature="xIKxsaIvf82pmGxU6PAtXayWmwuXi47xewE00vScHYCjiEKhJHK824/RhFUawzPWdytc8ARK2MyqogiQyykaBg==" length="8492310" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.2</title>
+      <pubDate>Sun, 15 Nov 2026 20:11:00 GMT</pubDate>
+      <sparkle:version>14</sparkle:version>
+      <sparkle:shortVersionString>1.2.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>In dark mode, scene previews in the menu and Settings now show each scene at night.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.2/Iconscape-1.2.2.dmg" type="application/octet-stream" sparkle:edSignature="o4EWwG1WBjTFzaqL5sObXXafuRjLAOth9JXQHI+CltXQDIQrc5zukPEi6PaTnXD0ki0JY+8Cr1n74BOt+7U1BQ==" length="8497849" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.1</title>
+      <pubDate>Sun, 15 Nov 2026 17:44:35 GMT</pubDate>
+      <sparkle:version>13</sparkle:version>
+      <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Surprise Me is back in the menu-bar panel: it switches to a random scene you own and draws it fresh. Settings now always opens on General.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.1/Iconscape-1.2.1.dmg" type="application/octet-stream" sparkle:edSignature="WeIivWRBDZNii6vwhocrQKa6H2ffEUpWlIoxO4l02KNXpnGT8VHjREpOejdNCURkl6thJSR6OBdD7n3/Mc2bBQ==" length="8464379" />
+    </item>
+    <item>
+      <title>Iconscape 1.2.0</title>
+      <pubDate>Sun, 15 Nov 2026 17:21:31 GMT</pubDate>
+      <sparkle:version>12</sparkle:version>
+      <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>A new look: a frosted menu-bar panel, a redesigned Settings window with License and About pages, and a refreshed Welcome Guide. Iconscape now shows in the Dock while Settings is open, and you can deactivate a Mac to move your license.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.0/Iconscape-1.2.0.dmg" type="application/octet-stream" sparkle:edSignature="NeUNITNu3wtpHXQYngHSCpErawMy/aq4IJWgGZQmU3xWRxRrYiSsFfxkvD+p8S9y43atwQR5Viq8iWb3UMr8Ag==" length="8461772" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.9</title>
+      <pubDate>Sun, 15 Nov 2026 04:02:27 GMT</pubDate>
+      <sparkle:version>11</sparkle:version>
+      <sparkle:shortVersionString>1.1.9</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Small wording polish in onboarding and scene descriptions.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.9/Iconscape-1.1.9.dmg" type="application/octet-stream" sparkle:edSignature="2crUdl2PZV5i4YUv3bNgFsblI1kuMDYCI8hickGW3WNUCq35ANAw/ba1T3rdEukFxvOst25GWpz+/Ol32nPPCg==" length="8194047" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.8</title>
+      <pubDate>Sun, 15 Nov 2026 03:26:21 GMT</pubDate>
+      <sparkle:version>10</sparkle:version>
+      <sparkle:shortVersionString>1.1.8</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Free scenes are now listed first. Metro&#x27;s rooftop is a little roomier, and nothing hangs over its edge anymore. When you move an icon, trees and other props now leave just before their island shrinks.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.8/Iconscape-1.1.8.dmg" type="application/octet-stream" sparkle:edSignature="AfogBir7Fj+k01j5MdrZT0f48Q4q/bxmAFYOjt0kt251JKBURIHUYojPcDCgiHF8NWCb2ObaSeXFjrGtCdUMCQ==" length="8194031" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.7</title>
+      <pubDate>Sat, 14 Nov 2026 22:15:26 GMT</pubDate>
+      <sparkle:version>9</sparkle:version>
+      <sparkle:shortVersionString>1.1.7</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Drifting clouds now have rounded edges and softer, moonlit shadows at night. Forest has its birds back.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.7/Iconscape-1.1.7.dmg" type="application/octet-stream" sparkle:edSignature="EnZzRmywGI+2Y5JwfuzN7UW4LJnzZkyEQvAYmIsMZ7+bcNf3ali3FS95NikpggilveBmcv/BFBN3LOcMBPNoDA==" length="8191772" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.6</title>
+      <pubDate>Sat, 14 Nov 2026 16:32:42 GMT</pubDate>
+      <sparkle:version>8</sparkle:version>
+      <sparkle:shortVersionString>1.1.6</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Theme switches now flow across multiple monitors: the new scene grows out from your icons and carries on onto your other displays instead of flashing.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.6/Iconscape-1.1.6.dmg" type="application/octet-stream" sparkle:edSignature="wd5TvQ63BfpIhsJ5Ro1mGKFtFRl60O71Q+Pqh8FnbsWBG/xjoevcY0gEA5MiTRe0td2Tdj1sjvpr8Mp3K/w7CQ==" length="8161807" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.5</title>
+      <pubDate>Sat, 14 Nov 2026 16:11:59 GMT</pubDate>
+      <sparkle:version>7</sparkle:version>
+      <sparkle:shortVersionString>1.1.5</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Smoother icon moves in Metro: lane lines stay bright and nearby buildings no longer flicker while the city rearranges.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.5/Iconscape-1.1.5.dmg" type="application/octet-stream" sparkle:edSignature="orBDU4ySK0kyDcuStO9lvRPkaw5XwVedexlouNYZV1lkcIH/jliut0nbqWqaMLuFGGrxxIvNA9c3+0rSUz7WDg==" length="8150976" />
+    </item>
+    <item>
+      <title>Iconscape 1.1.2</title>
+      <pubDate>Sat, 14 Nov 2026 05:09:10 GMT</pubDate>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>1.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>After buying Map, Iconscape offers once to centre it on your own town instead of your time zone&#x27;s city.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.1.2/Iconscape-1.1.2.dmg" type="application/octet-stream" sparkle:edSignature="ncC4FDsLOAiblyPQmlwhYHn3Vrh6yg6mHv04tYmAfuxTnOfnazVGgxD3CDqjR8qVjmmKPEt5mBH2QnfzpYISDw==" length="8148929" />
+    </item>
+  </channel>
+</rss>
