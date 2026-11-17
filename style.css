@@ -199,6 +199,18 @@ main > section { padding-left: max(16px, calc((100vw - 1160px) / 2)); padding-ri
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--ink-2); font-size: 14px;
 }
 .foot a { color: var(--ink-2); }
+.foot { align-items: center; }
+.foot-text p { margin: 4px 0; }
+.foot-badge { display: block; line-height: 0; opacity: .85; transition: opacity .2s; }
+.foot-badge:hover { opacity: 1; }
+.foot-badge img { height: 56px; width: auto; }
+.for-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .for-light { display: none; }
+  :root:not([data-theme="light"]) .for-dark { display: block; }
+}
+:root[data-theme="dark"] .for-light { display: none; }
+:root[data-theme="dark"] .for-dark { display: block; }
 
 /* Lightbox */
 .lightbox {
