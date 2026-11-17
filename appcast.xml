@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.2.15</title>
+      <pubDate>Tue, 17 Nov 2026 02:01:26 GMT</pubDate>
+      <sparkle:version>27</sparkle:version>
+      <sparkle:shortVersionString>1.2.15</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Join the new Iconscape Discord from the Welcome Guide or Settings → About to share your desktop, suggest scenes, and get help.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.15/Iconscape-1.2.15.dmg" type="application/octet-stream" sparkle:edSignature="lS6vDUjzsoirNAh6U9tXZM/LT+dnjmBksua1cCfNVnxV8ONAkg/JH+d8kgo5Nn0o10wEU6EsOTEBpSU4AdvoBA==" length="8519885" />
+    </item>
+    <item>
       <title>Iconscape 1.2.14</title>
       <pubDate>Tue, 17 Nov 2026 00:28:47 GMT</pubDate>
       <sparkle:version>26</sparkle:version>

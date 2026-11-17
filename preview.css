@@ -300,3 +300,42 @@
 .demo-peek.on { opacity: 1; transform: translate(calc(-100% - 10px), -50%) scale(1); }
 .demo-peek.right.on { transform: translate(10px, -50%) scale(1); }
 @media (prefers-reduced-motion: reduce) { .demo-peek { transition: opacity .18s ease; } }
+
+/* Dock (in the virtual 1470×956 screen, like the icons). Icons can't be dropped behind it. */
+.demo-dock {
+  position: absolute; z-index: 4; left: calc(601 / 1470 * 100%); top: calc(876 / 956 * 100%);
+  width: calc(268 / 1470 * 100%); height: calc(72 / 956 * 100%); container-type: size;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1) .45s, opacity .4s ease .45s;
+}
+/* The glass is a layer inside the dock, so its rounding can follow the dock's own height. */
+.demo-dock::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 30cqh;
+  background: rgba(255, 255, 255, .28); border: 1px solid rgba(255, 255, 255, .45);
+  backdrop-filter: blur(16px) saturate(1.6); -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .14);
+}
+.demo-dock > * { margin: 0 5.5cqh; }
+.demo.locked .demo-dock { transform: translateY(130%); opacity: 0; transition-delay: 0s; pointer-events: none; }
+.dk {
+  position: relative; flex: none; width: 75cqh; height: 75cqh; padding: 0; border: 0; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; border-radius: 22%; transition: transform .18s ease;
+}
+.dk:hover { transform: translateY(-8%) scale(1.08); }
+.dk:active { filter: brightness(.85); }
+.dk img { width: 100%; height: 100%; border-radius: 22%; display: block; }
+.dk-discord { background: #5865f2; }
+.dk-discord svg { width: 62%; height: auto; }
+.dk-trash, .dk-finder { cursor: default; }
+.dk-trash:hover { transform: none; }
+.dk-finder svg, .dk-trash svg { width: 100%; height: 100%; }
+.dk-sep { flex: none; width: 1px; height: 70cqh; background: rgba(255, 255, 255, .55); }
+.dk[data-name]:not(.dk-trash)::after {
+  content: attr(data-name); position: absolute; bottom: 118%; left: 50%; transform: translateX(-50%);
+  padding: 3px 9px; border-radius: 6px; font-size: 12px; white-space: nowrap; color: #1d1b18;
+  background: rgba(255, 255, 255, .82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .15); opacity: 0; pointer-events: none; transition: opacity .15s;
+}
+.dk:hover::after, .dk:focus-visible::after { opacity: 1; }
+.dk:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .demo-dock, .dk { transition: none; } }

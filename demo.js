@@ -564,6 +564,10 @@
   })();
   const rect = ic => ({ x: OX + ic.col * GX, y: OY + ic.row * GY, w: IW, h: IH });
   const maxCol = Math.floor((VW - OX - IW) / GX), maxRow = Math.floor((VH - OY - IH) / GY);
+  // The dock along the bottom (same box as .demo-dock in preview.css). No icon may sit or be dragged behind it.
+  const DOCK = { x: 601 - 8, y: 876 - 12, w: 268 + 16, h: 72 + 12 };
+  const overDock = (x, y) => x + IW > DOCK.x && x < DOCK.x + DOCK.w && y + IH > DOCK.y;
+  const underDock = (c, r) => overDock(OX + c * GX, OY + r * GY);
   const placeEl = (ic, x, y) => { ic.el.style.left = (x / VW * 100) + "%"; ic.el.style.top = (y / VH * 100) + "%"; };
   const selected = () => icons.filter(ic => ic.sel);
   function select(list) { for (const ic of icons) { ic.sel = list.includes(ic); ic.el.classList.toggle("sel", ic.sel); ic.el.setAttribute("aria-pressed", ic.sel); } }
@@ -572,6 +576,7 @@
     el.className = "dicon"; el.type = "button";
     el.innerHTML = `<span class="glyph g-${kind}"></span><span class="label">${name}</span>`;
     el.setAttribute("aria-label", `${name}. Drag, or use the arrow keys, to move it. Shift-click to select several.`);
+    if (underDock(col, row)) [col, row] = nearestFree(col, row, new Set(icons.map(x => x.col + "," + x.row))) || [col, row];
     const ic = { el, col, row, name, sel: false };
     placeEl(ic, OX + col * GX, OY + row * GY);
     iconLayer.appendChild(el);
@@ -581,7 +586,7 @@
   function nearestFree(c, r, blocked) {
     let best = null, bd = 1e9;
     for (let rr = 0; rr <= maxRow; rr++) for (let cc = 0; cc <= maxCol; cc++) {
-      if (blocked.has(cc + "," + rr)) continue;
+      if (blocked.has(cc + "," + rr) || underDock(cc, rr)) continue;
       const d = (cc - c) ** 2 + (rr - r) ** 2;
       if (d < bd) { bd = d; best = [cc, rr]; }
     }
@@ -1098,7 +1103,12 @@
       const mv = ev => {
         const [x, y] = toPts(ev, b), dx = x - sx, dy = y - sy;
         if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
-        for (const [g, ox, oy] of origin) placeEl(g, Math.max(-IW / 2, Math.min(VW - IW / 2, ox + dx)), Math.max(0, Math.min(VH - IH / 2, oy + dy)));
+        for (const [g, ox, oy] of origin) {
+          const nx = Math.max(-IW / 2, Math.min(VW - IW / 2, ox + dx));
+          let ny = Math.max(0, Math.min(VH - IH / 2, oy + dy));
+          if (overDock(nx, ny)) ny = DOCK.y - IH;   // slide along the top of the dock instead of under it
+          placeEl(g, nx, ny);
+        }
       };
       const up = ev => {
         ic.el.removeEventListener("pointermove", mv); ic.el.removeEventListener("pointerup", up); ic.el.removeEventListener("pointercancel", up);
@@ -1116,7 +1126,7 @@
       if (!d) return;
       e.preventDefault();
       const group = ic.sel ? selected() : [ic];
-      if (group.some(g => g.col + d[0] < 0 || g.col + d[0] > maxCol || g.row + d[1] < 0 || g.row + d[1] > maxRow)) return;
+      if (group.some(g => g.col + d[0] < 0 || g.col + d[0] > maxCol || g.row + d[1] < 0 || g.row + d[1] > maxRow || underDock(g.col + d[0], g.row + d[1]))) return;
       // Move the leading icons first, so a row of selected icons slides along instead of swapping.
       group.sort((p, q) => (q.col - p.col) * d[0] + (q.row - p.row) * d[1]);
       moveIcons(group.map(g => [g, g.col + d[0], g.row + d[1]]));
@@ -1124,7 +1134,7 @@
   }
   const marquee = document.createElement("div"); marquee.className = "demo-marquee"; marquee.hidden = true; stage.appendChild(marquee);
   stage.addEventListener("pointerdown", e => {
-    if (e.button !== 0 || locked || e.target.closest(".dicon, .demo-panel")) return;
+    if (e.button !== 0 || locked || e.target.closest(".dicon, .demo-panel, .demo-dock")) return;
     const b = stage.getBoundingClientRect(), [sx, sy] = toPts(e, b);
     const additive = e.shiftKey || e.metaKey || e.ctrlKey, base = additive ? selected() : [];
     stage.setPointerCapture(e.pointerId);
@@ -1153,7 +1163,9 @@
   const panel = root.querySelector(".demo-panel"), menuBtn = root.querySelector(".demo-menu-btn");
   const setPanel = open => { panel.hidden = !open; menuBtn.setAttribute("aria-expanded", open); if (open) { menuSeen = true; menuHint.classList.add("gone"); } };
   menuBtn.addEventListener("click", () => setPanel(panel.hidden));
-  document.addEventListener("pointerdown", e => { if (!panel.hidden && !panel.contains(e.target) && !menuBtn.contains(e.target)) setPanel(false); });
+  const dockApp = root.querySelector(".dk-app");
+  dockApp.addEventListener("click", () => setPanel(panel.hidden));   // the app's Dock icon opens the same menu
+  document.addEventListener("pointerdown", e => { if (!panel.hidden && !panel.contains(e.target) && !menuBtn.contains(e.target) && !dockApp.contains(e.target)) setPanel(false); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) { setPanel(false); menuBtn.focus(); } });
   // Like a real menu, picking anything closes it (after the item's own handler has run).
   panel.addEventListener("click", e => {
