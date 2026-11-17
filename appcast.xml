@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.2.16</title>
+      <pubDate>Tue, 17 Nov 2026 02:43:21 GMT</pubDate>
+      <sparkle:version>28</sparkle:version>
+      <sparkle:shortVersionString>1.2.16</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Settings → License now shows each Mac&#x27;s model. Entering a key again on the same Mac reuses its spot instead of taking a second one.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.16/Iconscape-1.2.16.dmg" type="application/octet-stream" sparkle:edSignature="sPHJTM7rJPvsDyk2G3SuOFuQJhiu8DnNZfqh+DLBQ37JcnYFH39r4HpjofkzVFs1JjApuzOZkbraI93cdNa+Dw==" length="8530501" />
+    </item>
+    <item>
       <title>Iconscape 1.2.15</title>
       <pubDate>Tue, 17 Nov 2026 02:01:26 GMT</pubDate>
       <sparkle:version>27</sparkle:version>
