@@ -38,9 +38,10 @@ const SCENES = [
 
 const darkMode = matchMedia("(prefers-color-scheme: dark)");
 const stillMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const thumbSrc = id => `${IMG}thumbs/${id}${darkMode.matches ? "-night" : ""}.jpg`;
-const fullSrc = id => `${IMG}${id}${darkMode.matches ? "-night" : ""}.jpg`;
-const loopSrc = (id, hd) => `${IMG}loops${hd ? "-hd" : ""}/${id}${darkMode.matches ? "-night" : ""}.mp4`;
+const MEDIA = "?v=2";   // bump when the stills and loops are re-rendered, so browsers don't keep the old ones
+const thumbSrc = id => `${IMG}thumbs/${id}${darkMode.matches ? "-night" : ""}.jpg${MEDIA}`;
+const fullSrc = id => `${IMG}${id}${darkMode.matches ? "-night" : ""}.jpg${MEDIA}`;
+const loopSrc = (id, hd) => `${IMG}loops${hd ? "-hd" : ""}/${id}${darkMode.matches ? "-night" : ""}.mp4${MEDIA}`;
 
 // The enlarged view: the scene's sharp loop with its name rising in underneath.
 const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img"), lbVid = lb.querySelector("video"), lbCap = lb.querySelector("figcaption");

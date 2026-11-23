@@ -122,38 +122,44 @@
   const groundCv = root.querySelector(".demo-ground"), puffCv = root.querySelector(".demo-puffs");
   const shadeCv = root.querySelector(".demo-shade"), lifeCv = root.querySelector(".demo-life"), oldCv = root.querySelector(".demo-old"), skyCv = root.querySelector(".demo-sky");
 
-  // Lagoon colour ramps by distance (the theme's surface function, tabulated). Sand is looked up by its
-  // distance nudged by the sand wobble, water by its distance; grain and landscape noise brighten or darken.
-  const dry = hex(0xF5EAD6), damp = hex(0xEDDDC2), wet = hex(0xDCC6A2);
-  const w0 = hex(0xA6EDE1), w1 = hex(0x45CAD3), w2 = hex(0x1BA0CB), w3 = hex(0x0C70B1);
-  const shallow = [0, 1, 2].map(i => mix(wet[i], w0[i], 0.45));
-  const moonC = hex(0x8EA6D8);
+  // Lagoon's colours (BeachLook.lagoon in the app): peach sand inland, a pale band above the water, damp sand and
+  // the wet strip; clear shallows over a sandy bed, then the turquoise ramp by depth. Night is its MoonGrade.
+  const LC = { dry: hex(0xF9F0DC), damp: hex(0xEFDDBE), inland: hex(0xEED9B7), washed: hex(0xE0C69C), bedNear: hex(0xF3E6CB),
+               bedFar: hex(0xDCE4C3), clearNear: hex(0xEFFBF6), clearFar: hex(0x98E5DB), w0: hex(0xA6EDE1), w1: hex(0x45CAD3),
+               w2: hex(0x1BA0CB), w3: hex(0x0C70B1) };
+  const LP = 62, moonC = hex(0x8EA6D8);
   const grade = (c, desat, exposure) => {   // MoonGrade.apply
     const l = (c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11) / 255;
     return c.map((x, i) => mix(x, l * moonC[i], desat) * exposure);
   };
-  const LO = -120, HI = 520, RES = 4, LN = (HI - LO) * RES, LP = 62;
   const AURA = 60;   // how broadly neighbouring islands' shallows merge (pt), as the app's auraBlend
-  const lutDay = new Float32Array(LN * 3), lutNight = new Float32Array(LN * 3);
-  const rampDay = new Float32Array(LN * 3), rampNight = new Float32Array(LN * 3);
-  for (let n = 0; n < LN; n++) {
-    const v = LO + n / RES, c = [0, 0, 0];
-    if (v < LP) {
-      const w = sst(-44, -2, v - LP), t1 = sst(0, 0.6, w), t2 = sst(0.45, 1, w);
-      for (let i = 0; i < 3; i++) c[i] = mix(mix(dry[i], damp[i], t1), wet[i], t2);
-    } else {
-      const d = v - LP, a = sst(0, 60, d), b = sst(15, 170, d), e = sst(110, 400, d), s1 = sst(2, 26, d), s0 = sst(0, 5, d);
-      for (let i = 0; i < 3; i++) c[i] = mix(wet[i], mix(shallow[i], mix(mix(mix(w0[i], w1[i], a), w2[i], b), w3[i], e), s1), s0);
+  const grain = (x, y, s) => hashF(Math.floor(x * 1.56), Math.floor(y * 1.56), s);
+  const mixC = (a, b, t, o) => { t = t < 0 ? 0 : t > 1 ? 1 : t; for (let i = 0; i < 3; i++) o[i] = a[i] + (b[i] - a[i]) * t; return o; };
+  // Lagoon's `surface`, line for line (the CPU fallback; the shader below is the same). `wob`, `mask` and `h` only
+  // depend on the spot, so the fallback works them out once.
+  const lc0 = [0, 0, 0], lc1 = [0, 0, 0], lc2 = [0, 0, 0];
+  function lagoonColor(v, dep, soft, x, y, wob, mask, h, g, g2, out) {
+    const d = v - LP, gd = g - 0.5;
+    if (d < 0) {
+      const e = d + wob * 1.5, q = soft + wob * 2;
+      mixC(LC.inland, LC.dry, Math.max(sst(0, 40, q), sst(-40, -20, e)), out);
+      mixC(out, LC.damp, sst(-16, -7, e), out);
+      const streak = (valueNoise(e / 3.4, (x + y) / 160, 73) - 0.5) * mask * sst(-40, -24, e);
+      if (streak > 0) { for (let i = 0; i < 3; i++) lc0[i] = LC.dry[i] * 1.02; mixC(out, lc0, streak * 0.5, out); }
+      else mixC(out, LC.washed, -streak * 0.5, out);
+      const k = 1 + h * 0.02 + gd * 0.025;
+      for (let i = 0; i < 3; i++) out[i] *= k;
+      return mixC(out, LC.washed, sst(-11, -4, d + (g2 - 0.5) * 5) * 0.85, out);
     }
-    const g = grade(c, 0.45, 0.95);
-    for (let i = 0; i < 3; i++) { lutDay[n * 3 + i] = c[i]; lutNight[n * 3 + i] = g[i]; }
-    // The open-water ramp alone, by depth past the shore (see auraDepth), for the merged shallows.
-    const dd = n / RES, a = sst(0, 60, dd), b = sst(15, 170, dd), e = sst(110, 400, dd), r = [0, 0, 0];
-    for (let i = 0; i < 3; i++) r[i] = mix(mix(mix(w0[i], w1[i], a), w2[i], b), w3[i], e);
-    const rg = grade(r, 0.45, 0.95);
-    for (let i = 0; i < 3; i++) { rampDay[n * 3 + i] = r[i]; rampNight[n * 3 + i] = rg[i]; }
+    const dd = Math.max(0, dep - LP) + gd * 16;
+    mixC(LC.w0, LC.w1, sst(0, 60, dd), out); mixC(out, LC.w2, sst(15, 170, dd), out); mixC(out, LC.w3, sst(110, 400, dd), out);
+    for (let i = 0; i < 3; i++) out[i] *= 1 + h * 0.05;
+    const shoal = 46, k = Math.max(0, Math.min(1, sst(shoal * 0.1, shoal * 1.25, d) + (g2 - 0.5) * 0.16));
+    mixC(LC.bedNear, LC.bedFar, sst(0, shoal, d), lc1); mixC(LC.clearNear, LC.clearFar, sst(0, shoal * 0.9, d), lc2);
+    for (let i = 0; i < 3; i++) lc1[i] = lc1[i] * lc2[i] / 255;
+    mixC(lc1, out, k, out);
+    return mixC(LC.washed, out, sst(0, 7, d), out);
   }
-  const wetNight = grade(wet, 0.45, 0.95), shallowNight = grade(shallow, 0.45, 0.95);
 
   // Where the shallows of two islands meet, the water between should read as one shallow sea, not a deeper
   // seam along the line halfway between them (the colour ramp by distance draws one there, and one island's
@@ -161,7 +167,7 @@
   // while a lone shore only blurs outward, so the smaller of the two keeps every single shore exact. Same as
   // the app's Field.blendAuras (at half the grid's resolution, three box blurs each way).
   const BC = (cols + 1) >> 1, BR = (rows + 1) >> 1;
-  const auraG = new Float32Array(BC * BR), auraT = new Float32Array(BC * BR), depthF = new Float32Array(cols * rows);
+  const auraG = new Float32Array(BC * BR), auraT = new Float32Array(BC * BR), depthF = new Float32Array(cols * rows * 2);   // depth, soft
   function auraPass(a, b, count, lines, along, across, h) {
     const w = 2 * h + 1;
     for (let l = 0; l < lines; l++) {
@@ -185,7 +191,7 @@
         const gx = Math.min(i / 2, BC - 1), i0 = Math.min(gx | 0, BC - 2), tx = gx - i0, a = j0 * BC + i0;
         const top = auraG[a] + (auraG[a + 1] - auraG[a]) * tx, bot = auraG[a + BC] + (auraG[a + BC + 1] - auraG[a + BC]) * tx;
         const o = j * cols + i, b = top + (bot - top) * ty;
-        depthF[o] = f[o] < b ? f[o] : b;
+        depthF[o * 2] = f[o] < b ? f[o] : b; depthF[o * 2 + 1] = b;
       }
     }
     return depthF;
@@ -199,7 +205,7 @@
       in vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`;
     const fs = `#version 300 es
       precision highp float; precision highp int;
-      uniform sampler2D field, depth, lut, bgDay, bgNight; uniform vec2 res; uniform float night; uniform int mode;
+      uniform sampler2D field, depth, bgDay, bgNight; uniform vec2 res; uniform float night; uniform int mode;
       out vec4 o;
       const vec2 dims = vec2(${cols}.0, ${rows}.0);
       uint hash2(int x, int y, int s) {
@@ -213,11 +219,13 @@
         vec2 u = f * f * (3.0 - 2.0 * f);
         return (a + (b - a) * u.x + (c - a) * u.y + (a - b - c + d) * u.x * u.y) * 2.0 - 1.0;
       }
-      float fbm3(vec2 q, int seed) {
+      float fbm4(vec2 q, int seed) {
         float s = 0.0, amp = 0.5, fr = 1.0, nrm = 0.0;
-        for (int k = 0; k < 3; k++) { s += amp * vnoise(q * fr, seed + k * 31); nrm += amp; amp *= 0.5; fr *= 2.03; }
+        for (int k = 0; k < 4; k++) { s += amp * vnoise(q * fr, seed + k * 31); nrm += amp; amp *= 0.5; fr *= 2.03; }
         return s / nrm;
       }
+      float grain(vec2 p, int s) { return hashF(int(floor(p.x * 1.56)), int(floor(p.y * 1.56)), s); }
+      vec3 moonGrade(vec3 c) { float l = dot(c, vec3(0.3, 0.59, 0.11)); return mix(c, l * ${vA(moonC)}, 0.45) * 0.95; }
       float vAt(vec2 pt) { return texture(field, (pt / ${STEP}.0 + 0.5) / dims).r; }
       void main() {
         vec2 pt = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / res * vec2(${VW}.0, ${VH}.0);
@@ -226,45 +234,58 @@
         vec2 uv = pt / vec2(${VW}.0, ${VH}.0);
         vec3 bg = mix(texture(bgDay, uv).rgb, texture(bgNight, uv).rgb, night);
         vec3 c;
-        if (mode == 0) {                                    // Lagoon
-          float hn = fbm3(pt / 360.0, 61) * 1.35, n, sc;
-          if (v < ${LP}.0) {
+        if (mode == 0) {                                    // Lagoon (as lagoonColor)
+          vec2 ds = texture(depth, (pt / ${STEP}.0 + 0.5) / dims).rg;
+          float h = fbm4(pt / 360.0, 61) * 1.35, d = v - ${LP}.0, g = grain(pt, 901), g2 = grain(pt, 902), gd = g - 0.5;
+          if (d < 0.0) {
             float wob = vnoise(pt / 46.0, 71) * 2.2 + vnoise(pt / 13.0, 72) * 0.8;
-            n = v - wob * 2.0; sc = 1.0 + fn * 0.035 + hn * 0.03;
-            float u = (clamp((n - ${LO}.0) * ${RES}.0, 0.0, ${LN - 1}.0) + 0.5) / ${LN}.0;
-            c = mix(texture(lut, vec2(u, 0.125)).rgb, texture(lut, vec2(u, 0.375)).rgb, night) * sc;
+            float e = d + wob * 1.5, q = ds.g + wob * 2.0;
+            c = mix(${vA(LC.inland)}, ${vA(LC.dry)}, max(smoothstep(0.0, 40.0, q), smoothstep(-40.0, -20.0, e)));
+            c = mix(c, ${vA(LC.damp)}, smoothstep(-16.0, -7.0, e));
+            float streak = (vnoise(vec2(e / 3.4, (pt.x + pt.y) / 160.0), 73) - 0.5) * smoothstep(0.35, 0.75, vnoise(pt / 90.0, 74))
+              * smoothstep(-40.0, -24.0, e);
+            c = mix(c, streak > 0.0 ? ${vA(LC.dry)} * 1.02 : ${vA(LC.washed)}, abs(streak) * 0.5);
+            c *= 1.0 + h * 0.02 + gd * 0.025;
+            c = mix(c, ${vA(LC.washed)}, smoothstep(-11.0, -4.0, d + (g2 - 0.5) * 5.0) * 0.85);
           } else {
-            // Shore details by the distance; the open-water ramp by the merged depth.
-            float d = v - ${LP}.0, dd = max(texture(depth, (pt / ${STEP}.0 + 0.5) / dims).r - ${LP}.0, 0.0);
-            float u = (clamp(dd * ${RES}.0, 0.0, ${LN - 1}.0) + 0.5) / ${LN}.0;
-            vec3 ramp = mix(texture(lut, vec2(u, 0.625)).rgb, texture(lut, vec2(u, 0.875)).rgb, night);
-            vec3 wetC = mix(${vA(wet)}, ${vA(wetNight)}, night), shallowC = mix(${vA(shallow)}, ${vA(shallowNight)}, night);
-            c = mix(wetC, mix(shallowC, ramp, smoothstep(2.0, 26.0, d)), smoothstep(0.0, 5.0, d)) * (1.0 + hn * 0.05 + fn * 0.015);
+            float dd = max(0.0, ds.r - ${LP}.0) + gd * 16.0;
+            c = mix(${vA(LC.w0)}, ${vA(LC.w1)}, smoothstep(0.0, 60.0, dd));
+            c = mix(c, ${vA(LC.w2)}, smoothstep(15.0, 170.0, dd));
+            c = mix(c, ${vA(LC.w3)}, smoothstep(110.0, 400.0, dd));
+            c *= 1.0 + h * 0.05;
+            float k = clamp(smoothstep(4.6, 57.5, d) + (g2 - 0.5) * 0.16, 0.0, 1.0);
+            vec3 bed = mix(${vA(LC.bedNear)}, ${vA(LC.bedFar)}, smoothstep(0.0, 46.0, d)) * mix(${vA(LC.clearNear)}, ${vA(LC.clearFar)}, smoothstep(0.0, 41.4, d));
+            c = mix(bed, c, k);
+            c = mix(${vA(LC.washed)}, c, smoothstep(0.0, 7.0, d));
           }
+          c = mix(c, moonGrade(c), night);
         } else if (mode == 1) {                             // Cloud Meadow: the field itself (clouds are drawn above)
           c = bg;
-        } else {                                            // Metro: rooftops, glass walls below them, cast shadows
+        } else {                                            // Metro: rooftops, office walls below them, cast shadows
           const float P = 52.0;
           vec3 tint = ${v3(0x0A1030)}, warm = ${v3(0xFFA94D)}, bulbC = ${v3(0xFFD27A)};
           float vs = vAt(pt - vec2(0.0, 22.0)), vsh = vAt(pt - vec2(28.0, 36.0));
           vec3 lc = warm; float la = 0.0;
           if (v < P) {
             float spill = smoothstep(P - 30.0, P - 3.0, v) * 0.42;
-            if (v > P - 4.0) {
-              bool bulb = v > P - 3.3 && v < P - 0.7 && fract((pt.x + pt.y) / 8.0) < 0.3;
-              c = ${v3(0xE8E5DE)} * (1.0 + fn * 0.02); lc = bulb ? bulbC : warm; la = bulb ? 1.0 : 0.32;
-            } else if (v > P - 5.5) { c = ${v3(0x8F8B85)}; la = spill + 0.06; }
+            if (v > P - 2.6) {
+              bool bulb = v > P - 2.2 && v < P - 0.4 && fract((pt.x + pt.y) / 8.0) < 0.3;
+              c = ${v3(0x434A53)} * (1.0 + fn * 0.02); lc = bulb ? bulbC : warm; la = bulb ? 1.0 : 0.32;
+            } else if (v > P - 3.6) { c = ${v3(0xDDE0DC)}; la = spill + 0.1; }
+            else if (v > P - 5.0) { c = ${v3(0x8E938F)}; la = spill + 0.06; }
             else {
-              c = ${v3(0xC9C6BF)} * (1.0 + fn * 0.025);
-              if (fract(pt.x / 26.0) < 0.045 || fract(pt.y / 26.0) < 0.045) c = ${v3(0xB8B4AC)};
+              c = ${v3(0xC4C8C3)} * (1.0 + fn * 0.025);
+              if (fract(pt.x / 26.0) < 0.045 || fract(pt.y / 26.0) < 0.045) c = ${v3(0xB2B6B1)};
               la = spill;
             }
             c = mix(mix(c, tint, 0.62 * night), lc, min(1.0, la) * night);
           } else if (vs < P) {
-            vec2 w = fract(pt / vec2(7.0, 6.0));
-            bool pane = w.x > 0.2 && w.x < 0.78 && w.y > 0.22 && w.y < 0.82;
-            c = (pane ? ${v3(0x3B4757)} : ${v3(0x7C8695)}) * (1.0 - smoothstep(P - 22.0, P, vs) * 0.25);
-            bool on = pane && hashF(int(floor(pt.x / 7.0)), int(floor(pt.y / 6.0)), 83) > 0.55;
+            vec2 w = vec2(fract(pt.x / 6.0), fract(pt.y / 6.5));
+            bool pane = w.x > 0.22 && w.x < 0.78 && w.y > 0.24 && w.y < 0.78, sill = w.x > 0.18 && w.x < 0.82 && w.y >= 0.78 && w.y < 0.88;
+            vec3 glass = ${v3(0x232A33)};
+            c = pane ? (w.y < 0.38 ? mix(glass, ${v3(0x9DB6CE)}, 0.35) : glass) : sill ? ${v3(0x77818C)} : ${v3(0x4A535E)};
+            c *= 1.0 - smoothstep(P - 22.0, P, vs) * 0.25;
+            bool on = pane && hashF(int(floor(pt.x / 6.0)), int(floor(pt.y / 6.5)), 83) > 0.55;
             c = mix(c, tint, 0.62 * night);
             if (on) c = mix(c, bulbC, 0.7 * night);
           } else {
@@ -288,18 +309,12 @@
       for (const [k, val] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, val);
       gl.uniform1i(gl.getUniformLocation(prog, name), unit);
     };
-    texture(1, "lut");
-    const lutPx = new Uint8Array(LN * 4 * 4).fill(255);
-    [lutDay, lutNight, rampDay, rampNight].forEach((rowC, r) => {
-      for (let n = 0; n < LN; n++) for (let i = 0; i < 3; i++) lutPx[(r * LN + n) * 4 + i] = rowC[n * 3 + i];
-    });
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, LN, 4, 0, gl.RGBA, gl.UNSIGNED_BYTE, lutPx);
     for (const [unit, name] of [[2, "bgDay"], [3, "bgNight"]]) {
       texture(unit, name);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
     }
     texture(4, "depth");
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, cols, rows, 0, gl.RED, gl.FLOAT, new Float32Array(N));
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, cols, rows, 0, gl.RG, gl.FLOAT, new Float32Array(N * 2));
     texture(0, "field");
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, cols, rows, 0, gl.RED, gl.FLOAT, new Float32Array(N));
     if (gl.getError() !== gl.NO_ERROR) return null;
@@ -319,7 +334,7 @@
         gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, cols, rows, gl.RED, gl.FLOAT, f);
         if (mode === 0) {
           gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D, texs[4]);
-          gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, cols, rows, gl.RED, gl.FLOAT, auraDepth(f, AURA));
+          gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, cols, rows, gl.RG, gl.FLOAT, auraDepth(f, AURA));
         }
         gl.uniform1f(uNight, nightAmt); gl.uniform1i(uMode, mode);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -329,43 +344,38 @@
 
   function cpuGround(cv) {   // Lagoon only
     const ctx = cv.getContext("2d");
-    let W = 0, H = 0, S = 1, img = null, wob, fg, hg;
-    const lut = new Float32Array(LN * 3), ramp = new Float32Array(LN * 3), wetC = [0, 0, 0], shC = [0, 0, 0];
+    let W = 0, H = 0, S = 1, img = null, wob, mask, hg, g1, g2;
+    const c = [0, 0, 0], n = [0, 0, 0];
     return {
       gpu: false,
       resize(w) {
         S = Math.min(0.6, w / VW); W = Math.round(VW * S); H = Math.round(VH * S);
         cv.width = W; cv.height = H; img = ctx.createImageData(W, H);
-        wob = new Float32Array(W * H); fg = new Float32Array(W * H); hg = new Float32Array(W * H);
+        wob = new Float32Array(W * H); mask = new Float32Array(W * H); hg = new Float32Array(W * H); g1 = new Float32Array(W * H); g2 = new Float32Array(W * H);
         for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
           const x = px / S, y = py / S, k = py * W + px;
           wob[k] = valueNoise(x / 46, y / 46, 71) * 2.2 + valueNoise(x / 13, y / 13, 72) * 0.8;
-          fg[k] = hashF(Math.round(x * 2), Math.round(y * 2), 5) * 2 - 1;
-          hg[k] = fbm(x / 360, y / 360, 3, 61) * 1.35;
+          mask[k] = sst(0.35, 0.75, valueNoise(x / 90, y / 90, 74));
+          hg[k] = fbm(x / 360, y / 360, 4, 61) * 1.35;
+          g1[k] = grain(x, y, 901); g2[k] = grain(x, y, 902);
         }
       },
       background() {},
       draw(f, nightAmt) {
-        for (let i = 0; i < lut.length; i++) { lut[i] = mix(lutDay[i], lutNight[i], nightAmt); ramp[i] = mix(rampDay[i], rampNight[i], nightAmt); }
-        for (let i = 0; i < 3; i++) { wetC[i] = mix(wet[i], wetNight[i], nightAmt); shC[i] = mix(shallow[i], shallowNight[i], nightAmt); }
         const dep = auraDepth(f, AURA);
         const px = img.data, inv = 1 / (S * STEP);
+        const lerp = (a, o, fx, fy, st) => {
+          const t = a[o * st] + (a[(o + 1) * st] - a[o * st]) * fx, b = a[(o + cols) * st] + (a[(o + cols + 1) * st] - a[(o + cols) * st]) * fx;
+          return t + (b - t) * fy;
+        };
         for (let py = 0; py < H; py++) {
           const gy = Math.min(rows - 1.001, py * inv), j = gy | 0, fy = gy - j;
           for (let qx = 0; qx < W; qx++) {
-            const gx = Math.min(cols - 1.001, qx * inv), i = gx | 0, fx = gx - i, o = j * cols + i;
-            const top = f[o] + (f[o + 1] - f[o]) * fx, bot = f[o + cols] + (f[o + cols + 1] - f[o + cols]) * fx;
-            const v = top + (bot - top) * fy, k = py * W + qx, q = k * 4;
-            if (v < LP) {
-              let n = (v - wob[k] * 2 - LO) * RES; const s = 1 + fg[k] * 0.035 + hg[k] * 0.03;
-              n = (n < 0 ? 0 : n >= LN ? LN - 1 : n | 0) * 3;
-              px[q] = lut[n] * s; px[q + 1] = lut[n + 1] * s; px[q + 2] = lut[n + 2] * s; px[q + 3] = 255;
-              continue;
-            }
-            const dt = dep[o] + (dep[o + 1] - dep[o]) * fx, db = dep[o + cols] + (dep[o + cols + 1] - dep[o + cols]) * fx;
-            let n = (dt + (db - dt) * fy - LP) * RES; n = (n < 0 ? 0 : n >= LN ? LN - 1 : n | 0) * 3;
-            const d = v - LP, s = 1 + hg[k] * 0.05 + fg[k] * 0.015, s1 = sst(2, 26, d), s0 = sst(0, 5, d);
-            for (let i = 0; i < 3; i++) px[q + i] = mix(wetC[i], mix(shC[i], ramp[n + i], s1), s0) * s;
+            const gx = Math.min(cols - 1.001, qx * inv), i = gx | 0, fx = gx - i, o = j * cols + i, k = py * W + qx, q = k * 4;
+            lagoonColor(lerp(f, o, fx, fy, 1), lerp(dep, o, fx, fy, 2), lerp(dep.subarray(1), o, fx, fy, 2), qx / S, py / S,
+                        wob[k], mask[k], hg[k], g1[k], g2[k], c);
+            if (nightAmt > 0) { const gr = grade(c, 0.45, 0.95); for (let e = 0; e < 3; e++) n[e] = mix(c[e], gr[e], nightAmt); px[q] = n[0]; px[q + 1] = n[1]; px[q + 2] = n[2]; }
+            else { px[q] = c[0]; px[q + 1] = c[1]; px[q + 2] = c[2]; }
             px[q + 3] = 255;
           }
         }
@@ -388,23 +398,27 @@
   }
 
   // ---------- Artwork ----------
-  const art = {};
+  const art = {}, ART = "?v=2";   // bump when the sprites are re-exported, so browsers fetch the new ones
   const loadImg = src => new Promise(res => { const im = new Image(); im.decoding = "async"; im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
   const names = ["shell0", "shell1", "lantern", "lantern-night", "floatLantern", "floatLantern-night", "campfire", "campfire-night", "solarPanel", "planter", "waterTank"];
   for (let k = 0; k < 6; k++) names.push(`palm${k}`);
   for (let k = 0; k < 3; k++) names.push(`roofUnit${k}`);
-  for (let v = 0; v < 3; v++) { for (let f = 0; f < 3; f++) names.push(`swimmer${v}-${f}`); for (let f = 0; f < 2; f++) names.push(`kayak${v}-${f}`); }
-  const loadArt = () => Promise.all(names.map(n => loadImg(`sprites/${n}.png`).then(im => { art[n] = im; })));
+  // Swimmers and kayaks: every variant's frames, as sprites.json lists them.
+  const loadArt = () => {
+    for (const kind of ["swimmer", "kayak"]) meta[kind].forEach((m, v) => { for (let f = 0; f < m.frames; f++) names.push(`${kind}${v}-${f}`); });
+    return Promise.all(names.map(n => loadImg(`sprites/${n}.png${ART}`).then(im => { art[n] = im; })));
+  };
   // Each scene's moving life, fetched the first time the scene is shown (or preloaded once the page settles).
   const SCENE_ART = {
     lagoon: ["gull-0", "gull-1", "gull-shadow-0", "gull-shadow-1", "cloudShadow"],
-    meadow: ["kiteKid-0", "kiteKid-1", "kiteKid-kite", "cat-0", "cat-1", "drift0", "drift1", "drift2", "drift0-shadow", "drift1-shadow",
-             "drift2-shadow", "butterfly0", "butterfly1", "butterfly2", "firefly", "songbird-0", "songbird-1", "songbird-shadow-0", "songbird-shadow-1"],
+    meadow: ["lumps", "kiteKid-0", "kiteKid-1", "kiteKid-kite", "cat-0", "cat-1", "drift0", "drift1", "drift2", "drift0-shadow", "drift1-shadow",
+             "drift2-shadow", "butterfly0", "butterfly1", "butterfly2", "butterfly3", "firefly", "songbird-shadow-0", "songbird-shadow-1"],
     metro: ["headlights", "crow-0", "crow-1", "crow-shadow-0", "crow-shadow-1", "cloudShadow"]
   };
-  for (let k = 0; k < 7; k++) SCENE_ART.metro.push(`car${k}`);
+  for (let v = 0; v < 3; v++) SCENE_ART.meadow.push(`songbird${v}-0`, `songbird${v}-1`);
   const sceneArt = {};
-  const loadSceneArt = id => sceneArt[id] || (sceneArt[id] = Promise.all(SCENE_ART[id].map(n => art[n] ? 0 : loadImg(`sprites/${n}.png`).then(im => { art[n] = im; }))));
+  const artFor = id => id === "metro" ? SCENE_ART.metro.concat(meta.cars.map((_, k) => `car${k}`)) : SCENE_ART[id];
+  const loadSceneArt = id => sceneArt[id] || (sceneArt[id] = Promise.all(artFor(id).map(n => art[n] ? 0 : loadImg(`sprites/${n}.png${ART}`).then(im => { art[n] = im; }))));
   // Cloud Meadow's night multiplies everything below its lights by the moon colour (the ground image has it
   // already); moving things get a moonlit copy of their sprite, faded in with the night.
   const moonlit = {};
@@ -443,7 +457,7 @@
   const bgs = {};
   const loadBg = (id, night) => {
     const key = id + (night ? "-night" : "");
-    return bgs[key] || (bgs[key] = loadImg(`sprites/${key}-bg.jpg`));
+    return bgs[key] || (bgs[key] = loadImg(`sprites/${key}-bg.jpg${ART}`));
   };
 
   // ---------- Props: one candidate per cell, decided by the field like the app ----------
@@ -460,10 +474,10 @@
   function propKind(c, v) {
     if (sceneId === "lagoon") {
       const P = 62;
-      if (v > P - 24 && v < P - 5 && c.a < 0.05) return "palm";
-      if (v > 6 && v < P - 5 && c.b < 0.02) return "shell";
-      if (nightAmt > 0.02 && v < P - 8 && v > P - 22 && c.b > 0.94) return "lantern";
-      if (nightAmt > 0.02 && v > P + 50 && c.b > 0.997) return "floatLantern";
+      if (v > P - 36 && v <= P - 17 && c.a < 0.035) return "palm";
+      if (v > 6 && v <= P - 17 && c.b < 0.015) return "shell";
+      if (nightAmt > 0.02 && v < P - 18 && v > P - 32 && c.b > 0.95) return "lantern";
+      if (nightAmt > 0.02 && v > P + 50 && c.b > 0.998) return "floatLantern";
       return null;
     }
     if (sceneId === "metro") {
@@ -477,21 +491,22 @@
     return null;
   }
 
-  // ---------- Cloud Meadow's puffs (makePuffs / drawPuffs in Props.swift) ----------
-  const PUFF = { thr: 36, r0: 24, r1: 38, sp: 24, body: [hex(0xDCE6F1), hex(0xE0E9F3)], hi: hex(0xF3F7FB), hiA: 0.35,
-                 shade: 0.95, off: [70, 95], shA: 0.32, shC: "#2B561E" };
+  // ---------- Cloud Meadow's clouds (makePuffs / drawPuffs with billows in Props.swift) ----------
+  // Puffs on two grids: small ones along the cloud's edge, big mounds (crown) filling its middle. Each is painted
+  // from brush-edged lumps, tone by tone from the shadow blue up to the sunlit cream.
+  const PUFF = { thr: 36, r0: 24, r1: 38, sp: 24, crown: 1.55, off: [70, 95], shA: 0.32 };
+  const BAND = PUFF.r1 * PUFF.crown * 1.7;
   const puffCells = [];
-  for (let cj = -2; cj < VH / PUFF.sp + 3; cj++) for (let ci = -2; ci < VW / PUFF.sp + 3; ci++) {
-    const r = k => hashF(ci * 7 + 3 + k, cj * 13 + 5 - k, 23 + 404 + k);
-    puffCells.push({ x: (ci + r(1)) * PUFF.sp, y: (cj + r(2)) * PUFF.sp, r: mix(PUFF.r0, PUFF.r1, r(3)), color: r(4) < 0.5 ? 0 : 1,
-                     seed: r(6), k: 0, k0: 0, k1: 0 });
-  }
+  const scatter = (sp, scale, salt, big) => {
+    for (let cj = -2; cj < VH / sp + 3; cj++) for (let ci = -2; ci < VW / sp + 3; ci++) {
+      const r = k => hashF(ci * 7 + 3 + k, cj * 13 + 5 - k, 23 + 404 + salt + k);
+      puffCells.push({ x: (ci + r(1)) * sp, y: (cj + r(2)) * sp, r: mix(PUFF.r0, PUFF.r1, r(3)) * scale, seed: r(6), big, edge: false, k: 0, k0: 0, k1: 0 });
+    }
+  };
+  scatter(PUFF.sp, 1, 0, false);
+  scatter(PUFF.sp * PUFF.crown * 1.05, PUFF.crown, 31, true);
   puffCells.sort((a, b) => a.y - b.y);
-  // Each puff's shading is drawn once per colour (and again as night falls) and stamped at its size; the cast
-  // shadow and the white rims are one shape each, so overlapping puffs don't darken or double up.
-  const PR = 40, PPX = 1.6, PS = Math.ceil(PR * 2.4 * PPX);
-  const puffArt = [document.createElement("canvas"), document.createElement("canvas")];
-  let puffArtNight = -1;
+  const LUMP = [0xA3B7DF, 0xC6D5EF, 0xE3EBF8, 0xFDFDF8].map(hex);
   const moonC3 = [133, 151, 208];
   const atNight = c => {   // the ground's night look: MoonGrade(exposure 0.8), then the moonlight multiply
     const g = grade(c, 0.55, 0.8).map((x, i) => x * moonC3[i] / 255);
@@ -500,28 +515,31 @@
   // Clouds only take the moonlight multiply, so the ones under the icons match the drifting ones above them.
   const cloudNight = c => c.map((x, i) => mix(x, x * moonC3[i] / 255, nightAmt));
   const rgba = (c, a = 1) => `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${a})`;
-  const circle = (c, x, y, r) => { c.beginPath(); c.arc(x, y, Math.max(0, r), 0, Math.PI * 2); c.fill(); };
-  function makePuffArt() {
+  // The lump sheet (4 shapes down, 4 tones across), moonlit as night falls.
+  const lumpCv = document.createElement("canvas");
+  let lumpNight = -1;
+  function lumpSheet() {
+    const im = art.lumps; if (!im) return null;
     const q = Math.round(nightAmt * 40);
-    if (q === puffArtNight) return;
-    puffArtNight = q;
-    const R = PR, o = R / 31, k = 0.87;   // the app's small fixed offsets are for a ~31-pt puff
-    puffArt.forEach((cv, i) => {
-      cv.width = cv.height = PS;
-      const c = cv.getContext("2d"), b = PUFF.body[i];
-      c.setTransform(PPX, 0, 0, PPX, PS / 2, PS / 2);
-      c.save(); c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.clip();
-      c.fillStyle = rgba(cloudNight(b.map(x => x * PUFF.shade * 0.86)), 0.17); circle(c, R * 0.1, R * 0.22, R * k * 1.04);
-      c.restore();
-      c.fillStyle = rgba(cloudNight(b.map(x => x * PUFF.shade))); circle(c, 1.2 * o, 2.2 * o, R * k);
-      c.fillStyle = rgba(cloudNight(b)); circle(c, -0.6 * o, -0.8 * o, R * 0.8);
-      c.fillStyle = rgba(cloudNight(b.map((x, j) => mix(x, PUFF.hi[j], 0.5))), PUFF.hiA * 0.35); circle(c, -R * 0.16, -R * 0.22, R * 0.62);
-      c.fillStyle = rgba(cloudNight(PUFF.hi), PUFF.hiA); circle(c, -R * 0.26, -R * 0.32, R * 0.36);
-    });
+    if (q !== lumpNight) {
+      lumpNight = q;
+      lumpCv.width = im.naturalWidth; lumpCv.height = im.naturalHeight;
+      const x = lumpCv.getContext("2d");
+      x.drawImage(im, 0, 0);
+      if (q) {
+        x.globalCompositeOperation = "multiply"; x.fillStyle = rgba(cloudNight([255, 255, 255])); x.fillRect(0, 0, lumpCv.width, lumpCv.height);
+        x.globalCompositeOperation = "destination-in"; x.drawImage(im, 0, 0); x.globalCompositeOperation = "source-over";
+      }
+    }
+    return lumpCv;
   }
   // Which puffs make up the clouds: those far enough inside the icons' clearing. During a move each puff that
   // comes or goes swells or deflates on its own little schedule, the way the app animates them.
-  const inCloud = (f, p) => sampleV(f, p.x, p.y) < PUFF.thr - p.r * 0.45;
+  const inCloud = (f, p) => {
+    const inside = PUFF.thr - sampleV(f, p.x, p.y);
+    p.edge = inside < p.r * 1.6;
+    return p.big ? inside > p.r * 1.05 : inside > p.r * 0.45 && inside < BAND;
+  };
   function settlePuffs(f) { for (const p of puffCells) p.k = p.k0 = p.k1 = inCloud(f, p) ? 1 : 0; }
   function aimPuffs(f) { for (const p of puffCells) { p.k0 = p.k; p.k1 = inCloud(f, p) ? 1 : 0; } }
   function stepPuffs(t) {
@@ -536,16 +554,32 @@
     for (const c of [ctx, sh]) { c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, puffCv.width, puffCv.height); }
     if (sceneId !== "meadow") return;
     live.length = 0;
-    for (const p of puffCells) if (p.k * p.r > 0.6) live.push({ x: p.x, y: p.y, r: p.r * p.k, color: p.color });
-    if (!live.length) return;
-    makePuffArt();
-    const union = (c, dx, dy, s) => { c.beginPath(); for (const p of live) { c.moveTo(p.x + dx + p.r * s, p.y + dy); c.arc(p.x + dx, p.y + dy, p.r * s, 0, Math.PI * 2); } c.fill(); };
+    for (const p of puffCells) if (p.k * p.r > 0.6) live.push({ x: p.x, y: p.y, r: p.r * p.k, seed: p.seed, edge: p.edge });
+    const sheet = lumpSheet();
+    if (!live.length || !sheet) return;
     // The cast shadow falls on the ground (under the drifting clouds, like the app), the clouds sit above.
     sh.setTransform(L, 0, 0, L, 0, 0);
-    sh.globalAlpha = PUFF.shA; sh.fillStyle = rgba(atNight(hex(0x2B561E))); union(sh, PUFF.off[0], PUFF.off[1], 1.02); sh.globalAlpha = 1;
+    sh.globalAlpha = PUFF.shA; sh.fillStyle = rgba(atNight(hex(0x2B561E)));
+    sh.beginPath(); for (const p of live) { const r = p.r * 1.02; sh.moveTo(p.x + PUFF.off[0] + r, p.y + PUFF.off[1]); sh.arc(p.x + PUFF.off[0], p.y + PUFF.off[1], r, 0, Math.PI * 2); }
+    sh.fill(); sh.globalAlpha = 1;
     ctx.setTransform(L, 0, 0, L, 0, 0);
-    ctx.fillStyle = rgba(cloudNight([255, 255, 255])); union(ctx, 0, 0, 1);
-    for (const p of live) ctx.drawImage(puffArt[p.color], p.x - p.r * 1.2, p.y - p.r * 1.2, p.r * 2.4, p.r * 2.4);
+    const T = sheet.width / 4;
+    const stamp = (p, tone, dx, dy, s) => {
+      const r = p.r * s * 1.08;
+      ctx.drawImage(sheet, tone * T, (Math.floor(p.seed * 997) % 4) * T, T, T, p.x + dx - r, p.y + dy - r, r * 2, r * 2);
+    };
+    const jit = (p, k) => (p.seed * k) % 1;
+    for (const p of live) stamp(p, 0, 0, 0, 1);
+    for (const p of live) { const j = jit(p, 17); stamp(p, 1, -p.r * (0.04 + j * 0.12), -p.r * (0.05 + j * 0.15), 0.9 + j * 0.08); }
+    for (const p of live) { const j = jit(p, 31); stamp(p, 2, -p.r * (0.1 + j * 0.16), -p.r * (0.12 + j * 0.2), 0.8 + j * 0.1); }
+    ctx.fillStyle = rgba(cloudNight(LUMP[1]));   // shade tucked under the big mounds, in slanted strokes
+    for (const p of live) if (!p.edge && p.seed < 0.4) {
+      const w = p.r * 1.2, h = p.r * 0.32;
+      ctx.save(); ctx.translate(p.x + p.r * 0.35, p.y + p.r * 0.55); ctx.rotate(0.5);
+      ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, h * 0.48); ctx.fill(); ctx.restore();
+    }
+    for (const p of live) if ((!p.edge && p.seed > 0.3) || p.seed > 0.6) { const j = jit(p, 53); stamp(p, 3, -p.r * (0.18 + j * 0.12), -p.r * (0.24 + j * 0.12), 0.6 + j * 0.12); }
+    for (const p of live) if (!p.edge && p.seed > 0.72) { stamp(p, 2, p.r * 0.12, p.r * 0.16, 0.7); stamp(p, 3, -p.r * 0.1, -p.r * 0.12, 0.6); }
   }
 
   // ---------- Icons and selection ----------
@@ -607,6 +641,35 @@
     }
     if (arrivedR.length) { startMorph(keptR, leftR, arrivedR); hideHint(); if (++moves === 1) setTimeout(showMenuHint, 1400); }
   }
+
+  // The Trash in the Dock: drop icons on it and they're thrown away (their land sinks); click it to put them back.
+  const trashEl = root.querySelector(".dk-trash"), trashed = [];
+  const overTrash = (cx, cy) => { const r = trashEl.getBoundingClientRect(), m = r.width * 0.25; return cx > r.left - m && cx < r.right + m && cy > r.top - m && cy < r.bottom + m; };
+  const trashAt = () => { const t = trashEl.getBoundingClientRect(), b = stage.getBoundingClientRect();
+    return [(t.left + t.width / 2 - b.left) / b.width * VW - IW / 2, (t.top + t.height / 2 - b.top) / b.height * VH - IH * 0.4]; };
+  function trashIcons(group) {
+    const [tx, ty] = trashAt();
+    for (const ic of group) {
+      ic.sel = false; ic.el.classList.remove("sel", "trashing"); ic.el.classList.add("binned"); ic.el.tabIndex = -1;
+      placeEl(ic, tx, ty); trashed.push(ic);
+    }
+    icons = icons.filter(ic => !group.includes(ic));
+    startMorph(icons.map(rect), group.map(rect), []);
+    trashEl.classList.add("full"); hideHint();
+  }
+  trashEl.addEventListener("click", () => {
+    if (!trashed.length || locked) return;
+    const back = trashed.splice(0), blocked = new Set(icons.map(ic => ic.col + "," + ic.row)), keptR = icons.map(rect), arrivedR = [];
+    for (const ic of back) {
+      const [c, r] = nearestFree(ic.col, ic.row, blocked) || [ic.col, ic.row];
+      blocked.add(c + "," + r); ic.col = c; ic.row = r; arrivedR.push(rect(ic));
+      ic.el.classList.remove("binned"); ic.el.tabIndex = 0; placeEl(ic, OX + c * GX, OY + r * GY);
+      ic.el.classList.add("arriving"); ic.el.addEventListener("animationend", () => ic.el.classList.remove("arriving"), { once: true });
+      icons.push(ic);
+    }
+    trashEl.classList.remove("full");
+    startMorph(keptR, [], arrivedR);
+  });
 
   // ---------- Scene state ----------
   // In dark mode the demo starts at night (and follows the system until someone picks Day or Night).
@@ -746,7 +809,7 @@
 
   // Cars (Renderer.carRoutes): straight runs along the lanes of open road, up to 14 at a time.
   function carRoutes(f) {
-    const P = 52, W = 16, roadAt = (x, y) => (x % 150 < W || y % 120 < W) && sampleV(f, x, y) >= P && sampleV(f, x, y - 22) >= P;
+    const P = 52, W = 22, PX = 200, PY = 164, roadAt = (x, y) => (x % PX < W || y % PY < W) && sampleV(f, x, y) >= P && sampleV(f, x, y - 22) >= P;
     const spans = (fixed, horiz) => {
       const out = [], limit = horiz ? VW : VH;
       let start = null;
@@ -758,14 +821,12 @@
       return out;
     };
     const routes = [];
-    for (let y = 0; y < VH; y += 120) for (const [lane, fwd] of [[W * 0.27, false], [W * 0.73, true]])
+    for (let y = 0; y < VH; y += PY) for (const [lane, fwd] of [[W * 0.27, false], [W * 0.73, true]])
       for (const [a, b] of spans(y + lane, true)) { const p = [a + 4, y + lane], q = [b - 4, y + lane]; routes.push(fwd ? [p, q] : [q, p]); }
-    for (let x = 0; x < VW; x += 150) for (const [lane, fwd] of [[W * 0.27, true], [W * 0.73, false]])
+    for (let x = 0; x < VW; x += PX) for (const [lane, fwd] of [[W * 0.27, true], [W * 0.73, false]])
       for (const [a, b] of spans(x + lane, false)) { const p = [x + lane, a + 4], q = [x + lane, b - 4]; routes.push(fwd ? [p, q] : [q, p]); }
-    let seed = 182;
-    const rnd = () => { seed = (imul(seed, 1103515245) + 12345) >>> 0; return seed / 4294967296; };
-    for (let i = routes.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [routes[i], routes[j]] = [routes[j], routes[i]]; }
-    return routes.slice(0, 14);
+    const share = Math.min(1, 14 / (2 * (Math.floor(VH / PY) + 1 + Math.floor(VW / PX) + 1)));
+    return routes.filter(r => hashF(Math.round(r[0][0] * 4), Math.round(r[0][1] * 4), 83 + 99) < share);
   }
   const routeKey = r => r.flat().map(Math.round).join(",");
   function planCars(f, fresh) {
@@ -774,7 +835,7 @@
       const key = routeKey(r);
       if (have.has(key)) continue;
       const len = Math.hypot(r[1][0] - r[0][0], r[1][1] - r[0][1]);
-      cars.push({ r, key, color: Math.floor(rand(0, 7)), dur: len / 38, u: Math.random(), alpha: fresh ? 1 : 0, target: 1 });
+      cars.push({ r, key, color: Math.floor(rand(0, meta.cars.length)), dur: len / 38, u: Math.random(), alpha: fresh ? 1 : 0, target: 1 });
     }
   }
 
@@ -787,8 +848,9 @@
   function settleLife(f) { planWalkers(f, false); if (sc.cars) planCars(f, false); }
 
   function newBug(kind, age) {
-    const b = { kind, x: rand(0, VW), y: rand(0, VH), dir: rand(0, Math.PI * 2), age, rot: 0, out: 1 };
-    if (kind === "b") Object.assign(b, { img: `butterfly${Math.floor(rand(0, 3))}`, v: 14 + rand(-8, 8), spin: rand(-0.6, 0.6), life: 16, a0: 1, fade: 0.04, size: 0.75 });
+    const b = { kind, x: rand(0, VW), y: rand(0, VH), dir: rand(0, Math.PI * 2), age, out: 1 };
+    if (kind === "b") Object.assign(b, { img: `butterfly${Math.floor(rand(0, 4))}`, v: 14 + rand(-8, 8), spin: rand(-0.6, 0.6), life: 16, a0: 1, fade: 0.04,
+                                         flap: rand(0.11, 0.16), fo: rand(0, 0.3) });
     else Object.assign(b, { img: "firefly", v: Math.max(0, 7 + rand(-5, 5)), spin: 0, life: 5 + rand(-2, 2), a0: Math.min(1, 1 + rand(-0.4, 0.4)), fade: 0.18, size: 0.45 + rand(-0.2, 0.2) });
     return b;
   }
@@ -832,13 +894,14 @@
       nextFlock = lifeT + rand(25, 70);
       if (nightAmt < 0.55) {
         const angle = rand(0, Math.PI * 2), cx = VW * rand(0.25, 0.75), cy = VH * rand(0.25, 0.75), reach = Math.hypot(VW, VH) / 2 + 80;
-        const birds = [];
+        const birds = [], size = sc.birds === "gull" ? 24 : 16, spread = sc.birds === "gull" ? 1.2 : 1;
         for (let i = 0, n = Math.floor(rand(2, 6)); i < n; i++) {
           const row = Math.floor((i + 1) / 2), side = i % 2 === 0 ? 1 : -1;
-          birds.push({ x: -row * 14 + rand(-3, 3), y: side * row * 12 + rand(-3, 3), flap: rand(0.28, 0.4), off: rand(0, 0.4) });
+          birds.push({ x: (-row * 14 + rand(-3, 3)) * spread, y: (side * row * 12 + rand(-3, 3)) * spread, flap: rand(0.28, 0.4), off: rand(0, 0.4) });
         }
         flocks.push({ angle, x0: cx - Math.cos(angle) * reach, y0: cy - Math.sin(angle) * reach, x1: cx + Math.cos(angle) * reach,
-                      y1: cy + Math.sin(angle) * reach, t: 0, dur: 2 * reach / rand(55, 80), birds, size: sc.birds === "gull" ? 20 : 16, style: sc.birds });
+                      y1: cy + Math.sin(angle) * reach, t: 0, dur: 2 * reach / rand(55, 80), birds, size,
+                      img: sc.birds === "songbird" ? `songbird${Math.floor(rand(0, 3))}` : sc.birds, shadow: `${sc.birds}-shadow` });
       }
     }
     for (const fl of flocks) fl.t += dt;
@@ -849,7 +912,7 @@
       bugDebt += dt * (kind === "b" ? 3 * VW * VH / 2e6 : VW * VH / 90000);
       while (bugDebt >= 1) { bugDebt -= 1; bugs.push(newBug(kind, 0)); }
       for (const b of bugs) {
-        b.x += Math.cos(b.dir) * b.v * dt; b.y += Math.sin(b.dir) * b.v * dt; b.rot += b.spin * dt; b.age += dt;
+        b.x += Math.cos(b.dir) * b.v * dt; b.y += Math.sin(b.dir) * b.v * dt; if (b.kind === "b") b.dir += b.spin * dt; b.age += dt;
         if (b.kind !== kind) b.out = Math.max(0, b.out - dt * 2);
       }
       bugs = bugs.filter(b => b.age < b.life && b.out > 0 && b.a0 - b.fade * b.age > 0);
@@ -864,8 +927,8 @@
       ctx.save(); ctx.globalAlpha = w.alpha; ctx.translate(x, y); ctx.rotate(w.hd ?? Math.atan2(b[1] - a[1], b[0] - a[0])); ctx.scale(m.scale, m.scale);
       if (w.spec.kind === "kiteKid") {   // the kite on its string, swaying from the kid's hand
         const sway = mix(-0.14, 0.12, (1 - Math.cos(lifeT / 2.6 * Math.PI)) / 2);
-        ctx.save(); ctx.translate(13 - m.w / 2, 5.2 - m.h / 2); ctx.rotate(-sway);
-        drawLit(ctx, "kiteKid-kite", -96, -30, 100, 60); ctx.restore();
+        ctx.save(); ctx.translate(18.16 - m.w / 2, m.h - 21.11 - m.h / 2); ctx.rotate(-sway);
+        drawLit(ctx, "kiteKid-kite", -96, -30, 100, 80); ctx.restore();
       }
       drawLit(ctx, `${w.spec.kind}-${frame}`, -m.w / 2, -m.h / 2, m.w, m.h);
       ctx.restore();
@@ -876,8 +939,9 @@
       const a = c.alpha * (u < 0.04 ? u / 0.04 : u > 0.96 ? (1 - u) / 0.04 : 1);
       if (a <= 0) continue;
       ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); ctx.rotate(Math.atan2(q[1] - p[1], q[0] - p[0]));
-      const im = art[`car${c.color}`]; if (im) ctx.drawImage(im, -8, -4.5, 16, 9);
-      if (lights > 0 && art.headlights) { ctx.globalAlpha = a * lights; ctx.drawImage(art.headlights, 6, -10, 40, 20); }
+      const im = art[`car${c.color}`], [w, h] = meta.cars[c.color];
+      if (im) ctx.drawImage(im, -w / 2, -h / 2, w, h);
+      if (lights > 0 && art.headlights) { ctx.globalAlpha = a * lights; ctx.drawImage(art.headlights, w / 2 - 2, -10, 40, 20); }
       ctx.restore();
     }
     for (const c of clouds) {
@@ -903,7 +967,7 @@
       for (const [dx, dy, kind] of [[26, 34, "-shadow"], [0, 0, ""]]) {
         sctx.save(); sctx.translate(x + dx, y + dy); sctx.rotate(fl.angle);
         for (const b of fl.birds) {
-          const im = art[`${fl.style}${kind}-${Math.floor((fl.t + b.off) / fl.flap * 2) % 2}`];
+          const im = art[`${kind ? fl.shadow : fl.img}-${Math.floor((fl.t + b.off) / (b.flap / 2)) % 2}`];
           if (im) sctx.drawImage(im, b.x - s / 2, b.y - s / 2, s, s);
         }
         sctx.restore();
@@ -913,7 +977,10 @@
     for (const b of bugs) {
       const im = art[b.img]; if (!im) continue;
       sctx.globalAlpha = Math.max(0, b.a0 - b.fade * b.age) * b.out * (b.kind === "f" ? glow : 1);
-      if (b.kind === "b") { sctx.save(); sctx.translate(b.x, b.y); sctx.rotate(b.rot); sctx.drawImage(im, -3.75, -3, 7.5, 6); sctx.restore(); }
+      if (b.kind === "b") {   // head along the way it's going, wings beating (a squash across, as the app does)
+        const u = ((b.age + b.fo) / b.flap) % 2, k = u < 1 ? u : 2 - u, w = 1 - 0.65 * k * k * (3 - 2 * k);
+        sctx.save(); sctx.translate(b.x, b.y); sctx.rotate(b.dir + Math.PI / 2); sctx.scale(w, 1); sctx.drawImage(im, -8, -7, 16, 14); sctx.restore();
+      }
       else { const s = 16 * b.size; sctx.drawImage(im, b.x - s / 2, b.y - s / 2, s, s); }
     }
     sctx.globalAlpha = 1;
@@ -1100,19 +1167,26 @@
       const origin = group.map(g => [g, OX + g.col * GX, OY + g.row * GY]);
       let moved = false;
       group.forEach(g => g.el.classList.add("dragging"));
+      let binning = false;
       const mv = ev => {
         const [x, y] = toPts(ev, b), dx = x - sx, dy = y - sy;
         if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+        binning = moved && overTrash(ev.clientX, ev.clientY);
+        trashEl.classList.toggle("hot", binning);
         for (const [g, ox, oy] of origin) {
+          g.el.classList.toggle("trashing", binning);
           const nx = Math.max(-IW / 2, Math.min(VW - IW / 2, ox + dx));
           let ny = Math.max(0, Math.min(VH - IH / 2, oy + dy));
-          if (overDock(nx, ny)) ny = DOCK.y - IH;   // slide along the top of the dock instead of under it
+          if (!binning && overDock(nx, ny)) ny = DOCK.y - IH;   // slide along the top of the dock instead of under it
           placeEl(g, nx, ny);
         }
       };
       const up = ev => {
         ic.el.removeEventListener("pointermove", mv); ic.el.removeEventListener("pointerup", up); ic.el.removeEventListener("pointercancel", up);
         group.forEach(g => g.el.classList.remove("dragging"));
+        trashEl.classList.remove("hot");
+        if (binning && ev.type === "pointerup") { trashIcons(group); return; }
+        group.forEach(g => g.el.classList.remove("trashing"));
         const [x, y] = toPts(ev, b), dx = x - sx, dy = y - sy;
         if (!moved) { for (const [g, ox, oy] of origin) placeEl(g, ox, oy); if (group.length > 1) select([ic]); return; }
         const wants = origin.map(([g, ox, oy]) => [g, Math.max(0, Math.min(maxCol, Math.round((ox + dx - OX) / GX))), Math.max(0, Math.min(maxRow, Math.round((oy + dy - OY) / GY)))]);
@@ -1122,6 +1196,7 @@
       ic.el.addEventListener("pointermove", mv); ic.el.addEventListener("pointerup", up); ic.el.addEventListener("pointercancel", up);
     });
     ic.el.addEventListener("keydown", e => {
+      if (e.key === "Backspace" && e.metaKey) { e.preventDefault(); trashIcons(ic.sel ? selected() : [ic]); return; }
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
       if (!d) return;
       e.preventDefault();
@@ -1304,8 +1379,7 @@
   }
 
   // ---------- Start ----------
-  Promise.all([loadArt(), loadSceneArt("lagoon"), fetch("sprites/sprites.json").then(r => r.json())]).then(([, , m]) => {
-    meta = m;
+  fetch("sprites/sprites.json" + ART).then(r => r.json()).then(m => { meta = m; return Promise.all([loadArt(), loadSceneArt("lagoon")]); }).then(() => {
     sizeCanvases();
     icons = START.map(([c, r], i) => makeIcon(DOCS[i][0], DOCS[i][1], c, r));
     cur = field(icons.map(rect));

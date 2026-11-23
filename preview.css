@@ -132,9 +132,9 @@
 .dp-scene.on { font-weight: 600; }
 .dp-scene.on::after { content: "✓"; margin-left: auto; color: #0d7f96; }
 .sw { width: 27px; height: 18px; border-radius: 4px; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .2); flex: none; }
-.sw-lagoon { background: url(img/mini/lagoon.jpg) center / cover; }
-.sw-meadow { background: url(img/mini/meadow.jpg) center / cover; }
-.sw-metro { background: url(img/mini/metro.jpg) center / cover; }
+.sw-lagoon { background: url(img/mini/lagoon.jpg?v=2) center / cover; }
+.sw-meadow { background: url(img/mini/meadow.jpg?v=2) center / cover; }
+.sw-metro { background: url(img/mini/metro.jpg?v=2) center / cover; }
 .dp-item { display: block; width: 100%; text-align: left; border: 0; background: none; font: inherit; padding: 6px 6px; border-radius: 6px; cursor: pointer; color: inherit; }
 .dp-item:hover { background: #0d7f96; color: #fff; }
 .dp-note { color: #8a8378; font-size: 11.5px; padding: 8px 6px 2px; border-top: 1px solid rgba(0, 0, 0, .1); margin-top: 6px; }
@@ -324,13 +324,23 @@
 .dk:hover { transform: translateY(-8%) scale(1.08); }
 .dk:active { filter: brightness(.85); }
 .dk img { width: 100%; height: 100%; border-radius: 22%; display: block; }
-.dk-discord { background: #5865f2; }
+/* Finder and Discord at the same size as the app icon, whose artwork sits inside the standard Mac icon margin. */
+.dk-tile { width: 80.5%; height: 80.5%; border-radius: 22.5%; background: #5865f2; display: flex; align-items: center; justify-content: center; }
 .dk-discord svg { width: 62%; height: auto; }
 .dk-trash, .dk-finder { cursor: default; }
 .dk-trash:hover { transform: none; }
-.dk-finder svg, .dk-trash svg { width: 100%; height: 100%; }
+.dk-finder svg { width: 80.5%; height: 80.5%; }
+.dk-trash svg { width: 100%; height: 100%; transition: transform .18s ease; }
+/* Icons dropped on the Trash: it fills up, and a click puts them back. */
+.dk-paper { opacity: 0; transition: opacity .3s ease .25s; }
+.dk-trash.full .dk-paper { opacity: .95; }
+.dk-trash.full { cursor: pointer; }
+.dk-trash.hot svg { transform: scale(1.18); }
+.dicon.trashing { z-index: 5; }
+.dicon.trashing .glyph { transform: scale(.7); opacity: .85; }
+.dicon.binned { transition: left .35s ease-in, top .35s ease-in, transform .35s ease-in, opacity .3s ease-in .05s; transform: scale(.15); opacity: 0; pointer-events: none; z-index: 5; }
 .dk-sep { flex: none; width: 1px; height: 70cqh; background: rgba(255, 255, 255, .55); }
-.dk[data-name]:not(.dk-trash)::after {
+.dk[data-name]:not(.dk-trash)::after, .dk-trash.full::after {
   content: attr(data-name); position: absolute; bottom: 118%; left: 50%; transform: translateX(-50%);
   padding: 3px 9px; border-radius: 6px; font-size: 12px; white-space: nowrap; color: #1d1b18;
   background: rgba(255, 255, 255, .82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
