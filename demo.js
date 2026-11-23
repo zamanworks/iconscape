@@ -490,7 +490,7 @@
   }
 
   // ---------- Artwork ----------
-  const art = {}, ART = "?v=2";   // bump when the sprites are re-exported, so browsers fetch the new ones
+  const art = {}, ART = "?v=3";   // bump when the sprites are re-exported, so browsers fetch the new ones
   const loadImg = src => new Promise(res => { const im = new Image(); im.decoding = "async"; im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
   const names = ["shell0", "shell1", "lantern", "lantern-night", "floatLantern", "floatLantern-night", "campfire", "campfire-night", "solarPanel", "planter", "waterTank"];
   for (let k = 0; k < 6; k++) names.push(`palm${k}`);

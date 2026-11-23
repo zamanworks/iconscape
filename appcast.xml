@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.2.17</title>
+      <pubDate>Mon, 23 Nov 2026 02:29:51 GMT</pubDate>
+      <sparkle:version>29</sparkle:version>
+      <sparkle:shortVersionString>1.2.17</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Our biggest update yet! Desktop Stacks are now supported (turn on Follow desktop stacks in Settings › General). Every scene is repainted by hand in a soft pencil-and-watercolor, anime style, and each scene now has its own settings page. Plus rolling waves in Lagoon, a rainy night in Metro, a redesigned Settings and many fixes.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.17/Iconscape-1.2.17.dmg" type="application/octet-stream" sparkle:edSignature="i1UhbcvHSlvOkdDdzOjrT0pkpGWIoy0LsvCkevAMhZPTjGZhgTtdHAQNNfcySB3zpLMBylk+VzoNQIJ3ktS2DQ==" length="9632658" />
+    </item>
+    <item>
       <title>Iconscape 1.2.16</title>
       <pubDate>Tue, 17 Nov 2026 02:43:21 GMT</pubDate>
       <sparkle:version>28</sparkle:version>
