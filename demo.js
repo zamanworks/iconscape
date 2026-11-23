@@ -120,6 +120,7 @@
   // ---------- Ground: drawn on the graphics card (WebGL2); without it, a lower-resolution Lagoon ----------
   const stage = root.querySelector(".demo-stage");
   const groundCv = root.querySelector(".demo-ground"), puffCv = root.querySelector(".demo-puffs");
+  const surfCv = root.querySelector(".demo-surf");
   const shadeCv = root.querySelector(".demo-shade"), lifeCv = root.querySelector(".demo-life"), oldCv = root.querySelector(".demo-old"), skyCv = root.querySelector(".demo-sky");
 
   // Lagoon's colours (BeachLook.lagoon in the app): peach sand inland, a pale band above the water, damp sand and
@@ -384,17 +385,108 @@
     };
   }
 
+  // Lagoon's rolling surf (Surf.swift): swell lines arriving from open water, a wash that runs up the sand
+  // behind a foam front, slides back and leaves a fading wet mark. Its own transparent layer over the ground.
+  function gpuSurf(cv) {
+    const gl = cv.getContext("webgl2", { antialias: false, alpha: true, premultipliedAlpha: true });
+    if (!gl) return null;
+    const vA = c => `vec3(${(c[0] / 255).toFixed(4)}, ${(c[1] / 255).toFixed(4)}, ${(c[2] / 255).toFixed(4)})`;
+    const fs = `#version 300 es
+      precision highp float;
+      uniform sampler2D field; uniform vec2 res; uniform float t, night;
+      out vec4 o;
+      const vec2 dims = vec2(${cols}.0, ${rows}.0);
+      const float lam = 36.0, speed = 12.0, reach = 12.0;
+      const vec3 wet = ${vA(hex(0xD8C19A))}, foam = ${vA(hex(0xFDFDF9))};
+      float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
+      float ss(float a, float b, float x) { float k = clamp((x - a) / (b - a), 0.0, 1.0); return k * k * (3.0 - 2.0 * k); }
+      float vnoise(vec2 p) {
+        vec2 i = floor(p), f = fract(p), w = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash12(i), hash12(i + vec2(1, 0)), w.x), mix(hash12(i + vec2(0, 1)), hash12(i + vec2(1, 1)), w.x), w.y);
+      }
+      float shore(vec2 p) { return texture(field, (p / ${STEP}.0 + 0.5) / dims).r - ${LP}.0; }
+      vec4 over(vec4 o, vec3 c, float a) { a = clamp(a, 0.0, 1.0); return vec4(c * a + o.rgb * (1.0 - a), a + o.a * (1.0 - a)); }
+      vec3 grade(vec3 c) { float l = dot(c, vec3(0.3, 0.59, 0.11)); return mix(c, mix(c, l * ${vA(moonC)}, 0.45) * 0.95, night); }
+      void main() {
+        vec2 p = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / res * vec2(${VW}.0, ${VH}.0);
+        float d = shore(p);
+        if (d > lam * 1.5 || d < -reach - 5.0) { o = vec4(0.0); return; }
+        // Only open water makes waves: a narrow channel or a small cove stays calm.
+        float e = 5.0;
+        vec2 g = vec2(shore(p + vec2(e, 0.0)) - shore(p - vec2(e, 0.0)), shore(p + vec2(0.0, e)) - shore(p - vec2(0.0, e)));
+        vec2 n = length(g) > 1e-3 ? normalize(g) : vec2(0.0, 1.0);
+        float energy = ss(20.0, 52.0, shore(p + n * (64.0 - d)));
+        if (energy < 0.01) { o = vec4(0.0); return; }
+        vec2 gp = floor(p * 1.56);
+        float g1 = hash12(gp + 0.5), g2 = hash12(gp + 7.3);
+        float along = vnoise(p / 420.0) * 1.3 + vnoise(p / 170.0 + 11.0) * 0.2;
+        vec4 c = vec4(0.0);
+        if (d > 0.0) {                                   // swells: faint far out, whiter as they near the beach
+          float fr = fract((d + t * speed) / lam + along), dpx = min(fr, 1.0 - fr) * lam;
+          float vis = (1.0 - ss(lam * 0.45, lam * 1.4, d)) * ss(0.0, 3.0, d) * energy;
+          float brk = 1.0 - ss(5.0, 30.0, d), cw = 0.85 * (1.0 + 0.6 * brk);
+          float crest = (1.0 - ss(cw * 0.55, cw * 1.7, dpx)) * vis * (0.3 + 0.55 * brk);
+          float trail = exp(-fr * lam / (5.0 * cw)) * vis * (0.12 + 0.3 * brk);
+          c = over(c, foam, max(crest, step(g1, trail) * 0.85));
+        }
+        float uS = t * speed / lam + along, fu = fract(uS), cyc = floor(uS);
+        float wetMark = 0.0, film = 0.0, edge = 0.0, spray = 0.0;
+        for (int j = 0; j < 3; j++) {                    // three washes overlap, each a cycle older
+          float a = fu + float(j);
+          float amp = reach * energy * (0.55 + 0.45 * hash12(vec2(cyc - float(j), 3.7)));
+          float front = a < 0.45 ? mix(1.5, -amp, 1.0 - pow(1.0 - a / 0.45, 2.2)) : mix(-amp, 1.5, ss(0.45, 1.4, a));
+          wetMark = max(wetMark, ss(-amp - 3.0, -amp + 9.0, d) * ss(0.2, 0.5, a) * (1.0 - ss(0.5, 2.8, a)));
+          float alpha = a < 0.45 ? 1.0 : 1.0 - ss(0.45, 1.4, a);
+          film = max(film, ss(front - 1.0, front + 1.0 + 14.0 * ss(0.45, 1.1, a), d) * alpha);
+          float edgeK = a < 0.45 ? 1.0 : 1.0 - ss(0.45, 1.0, a), dd = d - front;
+          edge = max(edge, (1.0 - ss(0.5, 1.4, abs(dd - 0.7))) * edgeK);
+          spray = max(spray, exp(-max(dd, 0.0) / 3.2) * ss(front - 1.0, front + 1.0, d) * edgeK * 0.45);
+        }
+        float onSand = 1.0 - ss(0.0, 4.0, d);
+        c = over(c, wet, wetMark * 0.3 * onSand);
+        c = over(c, mix(wet, vec3(0.95, 0.98, 0.97), 0.22), film * 0.42 * onSand);
+        c = over(c, foam, max(edge * 0.9, step(g2, spray) * 0.9) * (1.0 - ss(0.0, 2.5, d)) * energy);
+        o = vec4(c.a > 0.0 ? grade(c.rgb / c.a) * c.a : c.rgb, c.a);
+      }`;
+    const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); return gl.getShaderParameter(x, gl.COMPILE_STATUS) ? x : null; };
+    const v = sh(gl.VERTEX_SHADER, `#version 300 es
+      in vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`), f = sh(gl.FRAGMENT_SHADER, fs);
+    if (!v || !f) return null;
+    const prog = gl.createProgram(); gl.attachShader(prog, v); gl.attachShader(prog, f); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    for (const [k, val] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, val);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, cols, rows, 0, gl.RED, gl.FLOAT, new Float32Array(N));
+    if (gl.getError() !== gl.NO_ERROR) return null;
+    const uRes = gl.getUniformLocation(prog, "res"), uT = gl.getUniformLocation(prog, "t"), uNight = gl.getUniformLocation(prog, "night");
+    return {
+      resize(w, h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); gl.uniform2f(uRes, w, h); },
+      field(fl) { gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, cols, rows, gl.RED, gl.FLOAT, fl); },
+      draw(t, nightAmt) { gl.uniform1f(uT, t); gl.uniform1f(uNight, nightAmt); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+    };
+  }
+
   // (A canvas that tried WebGL can't fall back to 2D, so the fallback gets a fresh one.)
   let groundEl = groundCv;
   const ground = gpuGround(groundCv) || (() => { groundEl = groundCv.cloneNode(); groundCv.replaceWith(groundEl); return cpuGround(groundEl); })();
   if (!ground.gpu) root.querySelectorAll("[data-scene]:not([data-scene=lagoon])").forEach(b => b.hidden = true);
+  const surf = ground.gpu ? gpuSurf(surfCv) : null;
+  let surfT = 0, surfAt = -1;
 
   function sizeCanvases() {
     // Sized for the full window even while it's the smaller lock screen, so unlocking stays sharp.
     const wrap = root.parentElement, cs = getComputedStyle(wrap);
     const cssW = Math.max(stage.clientWidth, wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)) || 900, dpr = Math.min(devicePixelRatio || 1, 2);
     ground.resize(Math.round(cssW * dpr), Math.round(cssW * dpr * VH / VW));
-    for (const c of [shadeCv, lifeCv, puffCv, skyCv, oldCv]) { c.width = Math.round(Math.min(VW * 1.5, cssW * dpr)); c.height = Math.round(c.width * VH / VW); }
+    if (surf) { surf.resize(Math.round(cssW * dpr), Math.round(cssW * dpr * VH / VW)); surfAt = -1; }
+    // The sprite layers match the screen's pixels so the 3x art lands sharp; the soft ones can stay smaller.
+    for (const c of [shadeCv, lifeCv, puffCv, skyCv, oldCv]) {
+      c.width = Math.round(Math.min(VW * (c === lifeCv || c === skyCv ? 2 : 1.5), cssW * dpr)); c.height = Math.round(c.width * VH / VW);
+    }
   }
 
   // ---------- Artwork ----------
@@ -957,11 +1049,47 @@
     }
   }
 
+  // ---------- Rain on Metro after dark (its night look's light shower, rings where the drops land) ----------
+  const RAIN = 78, drops = [], rings = [];
+  let ringDebt = 0;
+  const rainStreak = (() => {   // Sprites.rainStreak: 5x16, slanting down and a little left, brightest at its head
+    const c = document.createElement("canvas"); c.width = 15; c.height = 48;
+    const x = c.getContext("2d"); x.scale(3, 3); x.lineWidth = 0.75; x.lineCap = "round";
+    const g = x.createLinearGradient(0, 0, 0, 16); g.addColorStop(0, "rgba(220,232,255,0)"); g.addColorStop(1, "rgba(220,232,255,1)");
+    x.strokeStyle = g; x.beginPath(); x.moveTo(4.3, 0.6); x.lineTo(0.9, 15.4); x.stroke();
+    return c;
+  })();
+  const newDrop = (d, y) => Object.assign(d, { x: VW / 2 + VH * 0.12 + (Math.random() - 0.5) * VW * 1.25, y,
+    v: 440 + (Math.random() - 0.5) * 100, s: 1 + (Math.random() - 0.5) * 0.5, a: 0.6 * (1 + (Math.random() - 0.5) * 0.8) });
+  function stepRain(dt) {
+    if (sceneId !== "metro" || nightAmt === 0 || reduceMotion) { drops.length = 0; rings.length = 0; return; }
+    if (!drops.length) for (let k = 0; k < RAIN; k++) drops.push(newDrop({}, Math.random() * (VH + 40) - 20));
+    const dx = -Math.sin(0.22), dy = Math.cos(0.22);
+    for (const d of drops) {
+      d.x += dx * d.v * dt; d.y += dy * d.v * dt;
+      if (d.y > VH + 20) newDrop(d, -20 - Math.random() * 30);
+    }
+    for (const r of rings) r.age += dt;
+    while (rings.length && rings[0].age > 0.55) rings.shift();
+    for (ringDebt += VW * VH / 45000 * dt; ringDebt >= 1; ringDebt--) rings.push({ x: Math.random() * VW, y: Math.random() * VH, age: 0 });
+  }
+  function drawRain() {
+    if (!drops.length) return;
+    for (const r of rings) {   // Sprites.splash: a 10x5 ring that grows and fades
+      const k = 0.3 + 1.2 * r.age;
+      sctx.globalAlpha = 0.45 * (1 - 0.8 * r.age) * nightAmt;
+      sctx.strokeStyle = "#DCE8FF"; sctx.lineWidth = 0.6 * k;
+      sctx.beginPath(); sctx.ellipse(r.x, r.y, 4.2 * k, 1.7 * k, 0, 0, Math.PI * 2); sctx.stroke();
+    }
+    for (const d of drops) { sctx.globalAlpha = d.a * nightAmt; sctx.drawImage(rainStreak, d.x - 2.5 * d.s, d.y - 8 * d.s, 5 * d.s, 16 * d.s); }
+    sctx.globalAlpha = 1;
+  }
+
   const sctx = skyCv.getContext("2d");
   function drawSky() {   // above the night: passing birds and their shadows, butterflies, fireflies
     const L = skyCv.width / VW;
     sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.clearRect(0, 0, skyCv.width, skyCv.height);
-    sctx.setTransform(L, 0, 0, L, 0, 0);
+    sctx.setTransform(L, 0, 0, L, 0, 0); sctx.imageSmoothingQuality = "high";
     for (const fl of flocks) {
       const u = fl.t / fl.dur, x = mix(fl.x0, fl.x1, u), y = mix(fl.y0, fl.y1, u), s = fl.size;
       for (const [dx, dy, kind] of [[26, 34, "-shadow"], [0, 0, ""]]) {
@@ -983,7 +1111,7 @@
       }
       else { const s = 16 * b.size; sctx.drawImage(im, b.x - s / 2, b.y - s / 2, s, s); }
     }
-    sctx.globalAlpha = 1;
+    sctx.globalAlpha = 1;    drawRain();
   }
 
   // Cloud Meadow's campfires: one spot in each part of the screen, lit wherever it's open meadow.
@@ -996,7 +1124,7 @@
   function drawLife(f, dt) {
     const L = lifeCv.width / VW;
     lctx.setTransform(1, 0, 0, 1, 0, 0); lctx.clearRect(0, 0, lifeCv.width, lifeCv.height);
-    lctx.setTransform(L, 0, 0, L, 0, 0);
+    lctx.setTransform(L, 0, 0, L, 0, 0); lctx.imageSmoothingQuality = "high";   // smooth downscaling of the 3x sprites
     for (const w of walkers) {
       if (w.alpha < 0.01) continue;
       const im = art[`${w.kind}${w.v}-${Math.floor(w.phase / w.m.frameTime) % w.m.frames}`]; if (!im) continue;
@@ -1059,6 +1187,7 @@
     snapCv.width = oldCv.width; snapCv.height = oldCv.height;
     const sx = snapCv.getContext("2d");
     sx.drawImage(groundEl, 0, 0, snapCv.width, snapCv.height);
+    if (surf && !surfCv.hidden) sx.drawImage(surfCv, 0, 0, snapCv.width, snapCv.height);
     if (sc.moon && nightAmt > 0) {
       sx.globalCompositeOperation = "multiply"; sx.globalAlpha = sc.moon * nightAmt; sx.fillStyle = "#8597d0";
       sx.fillRect(0, 0, snapCv.width, snapCv.height); sx.globalCompositeOperation = "source-over"; sx.globalAlpha = 1;
@@ -1122,10 +1251,20 @@
     root.style.setProperty("--night", nightAmt.toFixed(3));
     if (nightAmt !== was) groundDirty = true;
     if (groundDirty) { ground.draw(f, nightAmt, sc.mode); drawPuffs(); redrawAll = false; }
+    if (surf) {                                       // the surf rolls on at 30 fps, only on Lagoon
+      const on = sceneId === "lagoon";
+      if (surfCv.hidden === on) surfCv.hidden = !on;
+      if (on) {
+        if (!locked && !reduceMotion) surfT += dt;
+        if (groundDirty) { surf.field(f); surfAt = -1; }
+        if (surfAt < 0 || surfT - surfAt >= 1 / 30) { surf.draw(surfT, nightAmt); surfAt = surfT; }
+      }
+    }
     const live = locked ? 0 : dt;                     // the lock screen is a still snapshot
     if (!locked && (!reduceMotion || morph)) stepWalkers(f, dt);
     stepLife(f, reduceMotion ? 0 : live);
     drawLife(f, live);
+    stepRain(live);
     drawSky();
     if (switching && !switching.loading) drawReveal();
     if (locked && !morph && !switching && nightAmt === goal) return;   // nothing moves until it's unlocked
@@ -1273,6 +1412,9 @@
   });
 
   const hint = root.querySelector(".demo-hint");
+  // Level with the first row's icons (glyph center: 4% margin + half of a 66%-wide glyph), so its arrow points at one;
+  // a pill that wraps on a phone starts no higher than the row itself, clear of the menu bar.
+  if (hint) hint.style.top = `max(${(OY / VH * 100).toFixed(3)}%, calc(${((OY + IW * 0.37) / VH * 100).toFixed(3)}% - ${hint.offsetHeight / 2}px))`;
   function hideHint() { if (hint) hint.classList.add("gone"); }
   // After the first move, point at the menu-bar icon: scenes and night live there.
   const menuHint = root.querySelector(".menu-hint");
