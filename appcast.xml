@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.2.18</title>
+      <pubDate>Tue, 24 Nov 2026 15:43:56 GMT</pubDate>
+      <sparkle:version>30</sparkle:version>
+      <sparkle:shortVersionString>1.2.18</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>A new glossy app icon, and a fix for Forest deer that could end up walking over the trees after you moved an icon.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.18/Iconscape-1.2.18.dmg" type="application/octet-stream" sparkle:edSignature="24EM5RB3tGaXCa23kuNvpvdwJgh1vETy3UaeARmfN+HJG8UDetNu5RkFvTgIwZMuLzO9A783nreWwpW159qVAg==" length="9690933" />
+    </item>
+    <item>
       <title>Iconscape 1.2.17</title>
       <pubDate>Mon, 23 Nov 2026 02:29:51 GMT</pubDate>
       <sparkle:version>29</sparkle:version>
