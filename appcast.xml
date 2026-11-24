@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.2.19</title>
+      <pubDate>Tue, 24 Nov 2026 16:31:42 GMT</pubDate>
+      <sparkle:version>31</sparkle:version>
+      <sparkle:shortVersionString>1.2.19</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>The menu-bar menu is now frosted glass, so your scene shows through softly behind it. Settings and the Welcome Guide use the same glass, more solid for easy reading.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.2.19/Iconscape-1.2.19.dmg" type="application/octet-stream" sparkle:edSignature="MQHDL9U1kA5eJmL8Joc6dPoaFvy6W3Vm7+mNOjqO488EUVN4g+bmQ7yjWiXJ9DgV9QZyxMEUfDTb0gInFSPXCA==" length="9691470" />
+    </item>
+    <item>
       <title>Iconscape 1.2.18</title>
       <pubDate>Tue, 24 Nov 2026 15:43:56 GMT</pubDate>
       <sparkle:version>30</sparkle:version>
