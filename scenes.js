@@ -33,7 +33,7 @@ const SCENES = [
   ["frost", "Frostland", "Ice floes below a snowy village", false],
   ["cinder", "Cinder", "Basalt plateaus in a sea of lava", false],
   ["topo", "Topograph", "Your icons as hilltops on a contour map", false],
-  ["map", "Map", "An old inked map of your own home region", false]
+  ["map", "Map", "An inked map of your home region, or your own neighborhood street by street", false]
 ];
 
 const darkMode = matchMedia("(prefers-color-scheme: dark)");

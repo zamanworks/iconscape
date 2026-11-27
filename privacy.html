@@ -12,8 +12,8 @@
 <meta property="og:title" content="Privacy · Iconscape">
 <meta property="og:description" content="How Iconscape handles your data: no accounts, no analytics, and no tracking.">
 <meta property="og:url" content="https://iconscape.app/privacy.html">
-<meta property="og:image" content="https://iconscape.app/img/share.jpg?v=2">
-<meta property="og:image:secure_url" content="https://iconscape.app/img/share.jpg?v=2">
+<meta property="og:image" content="https://iconscape.app/img/share.jpg?v=1.3.0">
+<meta property="og:image:secure_url" content="https://iconscape.app/img/share.jpg?v=1.3.0">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Privacy · Iconscape">
 <meta name="twitter:description" content="How Iconscape handles your data: no accounts, no analytics, and no tracking.">
-<meta name="twitter:image" content="https://iconscape.app/img/share.jpg?v=2">
+<meta name="twitter:image" content="https://iconscape.app/img/share.jpg?v=1.3.0">
 <meta name="twitter:image:alt" content="Iconscape: your desktop, alive. A Mac desktop with Lagoon by day and Metro at night growing around the icons.">
 <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1e2021" media="(prefers-color-scheme: dark)">
@@ -29,7 +29,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=1.2.19">
+<link rel="stylesheet" href="style.css?v=1.3.0">
 </head>
 <body>
 <header class="nav">
@@ -38,7 +38,7 @@
 </header>
 <main class="legal">
 <h1>Iconscape Privacy Policy</h1>
-<p class="eff">Updated November 16, 2026</p>
+<p class="eff">Updated November 27, 2026</p>
 <p>Iconscape is a Mac app made by Ahdaf Zaman. It's built to work entirely on your Mac. There are no accounts, no analytics, and no tracking.</p>
 <h2>What Iconscape reads on your Mac</h2>
 <p>To grow the landscape around your desktop icons, Iconscape asks Finder for:</p>
@@ -49,7 +49,7 @@
 <p>Iconscape never reads the names or contents of your files. This information stays on your Mac and is used only to draw the scene. macOS asks for your permission ("control Finder") before Iconscape can read any of it.</p>
 <h2>What Iconscape stores on your Mac</h2>
 <ul>
-<li><b>Settings:</b> your theme, lighting, and other preferences, in the app's standard preferences file. If you use the Map theme, this includes the town you typed and its map coordinates.</li>
+<li><b>Settings:</b> your theme, lighting, and other preferences, in the app's standard preferences file. If you use the Map theme, this includes the town you typed and its map coordinates, and any neighborhood map you downloaded.</li>
 <li><b>Lock-screen images:</b> if you turn on <i>Show on lock screen</i>, snapshots of your scene are saved in <code>~/Library/Application Support/Iconscape/Wallpapers</code> and set as your desktop wallpaper.</li>
 <li><b>Theme previews:</b> small preview images, cached in <code>~/Library/Caches/Iconscape</code>.</li>
 <li><b>Purchases:</b> license keys you activate, stored in your Mac's Keychain.</li>
@@ -60,7 +60,8 @@
 <ul>
 <li><b>License keys.</b> When you activate one, Iconscape sends the key, your Mac's name (the one in System Settings → General → Sharing, like "Sam's MacBook Air"), and its model (like "MacBook Air (M2, 2022)") to Polar's license service to confirm the purchase. The name and model are saved with that activation so you can tell your Macs apart in <b>Settings → License</b> and in Polar's customer portal. Anyone who has your key can see them there, so if you'd rather not share a name, rename your Mac before activating. About once a week, Iconscape sends just the saved key(s) and that activation's ID to the same service to check they haven't been refunded or revoked. When you open <b>Settings → License</b>, it also sends your key(s) to Iconscape's own small service (api.iconscape.app, run on Cloudflare) that asks Polar which Macs use each key, so they can be listed. That service doesn't store your key or anything else.</li>
 <li><b>Updates.</b> About once a day, Iconscape downloads a small update list from the Iconscape website (iconscape.app, hosted by GitHub Pages) to see whether a newer version exists. Like any web request, this reveals your IP address and the app's version to GitHub. Nothing about you or your Mac is sent. You can turn this off in Settings, and use <b>Check for Updates…</b> in the menu instead.</li>
-<li><b>Map theme town lookup.</b> When you type a town in the Map theme's settings and press <b>Show on Map</b>, Iconscape sends just that name to Apple's location service (the one built into macOS) to find where it is. Apple's privacy policy covers that request. Iconscape never asks for your Mac's location, and the map itself is drawn from data bundled with the app, so showing it sends nothing.</li>
+<li><b>Map theme town lookup.</b> When you type a town or place in the Map theme's settings and press <b>Show on Map</b>, Iconscape sends just that name to Apple's location service (the one built into macOS) to find where it is. Apple's privacy policy covers that request. Iconscape never asks for your Mac's location, and the region map is drawn from data bundled with the app, so showing it sends nothing.</li>
+<li><b>Map theme neighborhood.</b> If you switch the Map theme to <b>Neighborhood</b>, Iconscape downloads the streets and buildings around your place once, from OpenStreetMap's main map server (overpass-api.de, run by FOSSGIS e.V., a German non-profit that supports OpenStreetMap). The request asks for a box of map around your place rounded to about half a mile (0.01°), and like any web request it reveals your IP address to that server; nothing else about you or your Mac is sent. The neighborhood map is then kept on your Mac, so showing it sends nothing more, and you can delete saved neighborhoods in the Map theme's settings.</li>
 </ul>
 <p>Iconscape doesn't connect to the internet otherwise.</p>
 <h2>Payments</h2>

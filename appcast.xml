@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.3.0</title>
+      <pubDate>Fri, 27 Nov 2026 19:46:40 GMT</pubDate>
+      <sparkle:version>32</sparkle:version>
+      <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Map gets a lot bigger. The new Neighborhood view draws your area street by street: streets and their names, buildings, parks, water, bridges and tunnels. Pick Old Ink, the new Modern Ink, or a clean Modern style with its own dark look at night. Search for a campus, park or landmark, zoom in close, turn the map, drag to frame it, and drop the pin exactly where you want it. You choose how many buildings and which names show. The Region map can also visit a random city every hour, day or week. Also new: scene previews in Settings now show each scene&#x27;s waves, animals and traffic.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.3.0/Iconscape-1.3.0.dmg" type="application/octet-stream" sparkle:edSignature="PaXyTQQPeL4ONqsMF1ayI8rFa9ekrLtdyl9dAUyj2tgh+AF4Ohjhop+sKgevBned6fOZDK0jLXDHsPfoNj6uAQ==" length="9984138" />
+    </item>
+    <item>
       <title>Iconscape 1.2.19</title>
       <pubDate>Tue, 24 Nov 2026 16:31:42 GMT</pubDate>
       <sparkle:version>31</sparkle:version>
