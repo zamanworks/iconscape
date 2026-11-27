@@ -5,6 +5,15 @@
     <link>https://iconscape.app/appcast.xml</link>
     <language>en</language>
     <item>
+      <title>Iconscape 1.3.1</title>
+      <pubDate>Fri, 27 Nov 2026 22:09:37 GMT</pubDate>
+      <sparkle:version>33</sparkle:version>
+      <sparkle:shortVersionString>1.3.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<p>Your islands now grow in when you unlock. When your Mac locks, the icon islands clear away, and the lock screen shows your scene exactly as it is, people, boats and animals included, just without the islands. Unlock, and the scene grows back in from your icons while everything keeps moving. You can turn this off in Settings › General › Grow islands after unlocking. Also fixed: the lock screen could briefly show the default macOS wallpaper after waking, and Frostland&#x27;s skaters could glide over open water when an icon sat near the pond.</p>]]></description>
+      <enclosure url="https://github.com/zamanworks/iconscape/releases/download/v1.3.1/Iconscape-1.3.1.dmg" type="application/octet-stream" sparkle:edSignature="bkuSetRsg/1RuDXLyyCOZjKz+WKg6doYH9HFQ8oCBo3vyoBUe8wr7BDWVdicENaJhkaR6RjMrli9LpuBaKgMAA==" length="10006936" />
+    </item>
+    <item>
       <title>Iconscape 1.3.0</title>
       <pubDate>Fri, 27 Nov 2026 19:46:40 GMT</pubDate>
       <sparkle:version>32</sparkle:version>
